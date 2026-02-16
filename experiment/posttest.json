@@ -2,37 +2,258 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "When using the One-Click Deploy option, which component is deployed first by the system?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "NRF",
+        "b": "AMF",
+        "c": "Service Bus",
+        "d": "UPF"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect. NRF is deployed after the Service Bus.",
+        "b": "Incorrect. AMF is not the first component.",
+        "c": "Correct. The Service Bus is deployed first during automatic deployment.",
+        "d": "Incorrect. UPF is deployed later in the sequence."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What happens to the existing topology when One-Click Deploy is initiated?",
+      "answers": {
+        "a": "It is merged with the new topology",
+        "b": "It is backed up automatically",
+        "c": "It is cleared before deployment",
+        "d": "It remains unchanged"
+      },
+      "explanations": {
+        "a": "Incorrect. Existing topology is not merged.",
+        "b": "Incorrect. No backup operation is mentioned.",
+        "c": "Correct. The system clears any existing topology automatically.",
+        "d": "Incorrect. The topology does not remain unchanged."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which action allows you to view the registration request sent by an AMF to the NRF?",
+      "answers": {
+        "a": "Click 'Show Deregistration Message'",
+        "b": "Restart the AMF",
+        "c": "Click 'Show Registration Message' in the AMF Configuration Panel",
+        "d": "Open the Service Bus logs"
+      },
+      "explanations": {
+        "a": "Incorrect. This shows deregistration details.",
+        "b": "Incorrect. Restarting does not display messages.",
+        "c": "Correct. The registration message is viewed from the Configuration Panel.",
+        "d": "Incorrect. Service Bus logs are unrelated."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "In what format are the registration and deregistration messages displayed?",
+      "answers": {
+        "a": "XML",
+        "b": "YAML",
+        "c": "Plain text",
+        "d": "JSON"
+      },
+      "explanations": {
+        "a": "Incorrect. XML is not used.",
+        "b": "Incorrect. YAML is not mentioned.",
+        "c": "Incorrect. Messages are structured.",
+        "d": "Correct. All messages are displayed in JSON format."
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which Network Function is responsible for maintaining registration information of all NFs?",
+      "answers": {
+        "a": "AMF",
+        "b": "NRF",
+        "c": "SMF",
+        "d": "UDM"
+      },
+      "explanations": {
+        "a": "Incorrect. AMF handles access management.",
+        "b": "Correct. NRF manages NF registration and discovery.",
+        "c": "Incorrect. SMF handles session management.",
+        "d": "Incorrect. UDM manages subscriber data."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "How can registration details from all Network Functions be viewed collectively?",
+      "answers": {
+        "a": "From each NF individually",
+        "b": "From the Service Bus panel",
+        "c": "From the NRF Configuration Panel",
+        "d": "From the UE Configuration Panel"
+      },
+      "explanations": {
+        "a": "Incorrect. This shows only individual NF details.",
+        "b": "Incorrect. Service Bus does not aggregate registrations.",
+        "c": "Correct. NRF displays registration requests from all NFs.",
+        "d": "Incorrect. UE does not manage registrations."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the correct procedure to deregister an SMF from the NRF?",
+      "answers": {
+        "a": "Stop the NRF service",
+        "b": "Delete the SMF node",
+        "c": "Click 'Deregister from NRF' in the SMF Configuration Panel",
+        "d": "Restart the SMF"
+      },
+      "explanations": {
+        "a": "Incorrect. NRF does not need to be stopped.",
+        "b": "Incorrect. Deletion is not required.",
+        "c": "Correct. Deregistration is performed via the Configuration Panel.",
+        "d": "Incorrect. Restarting does not deregister the NF."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "After deregistration, where can the deregistration request be viewed from the NF side?",
+      "answers": {
+        "a": "NRF topology only",
+        "b": "NF Configuration Panel using 'Show Deregistration Message'",
+        "c": "Service Bus logs",
+        "d": "UE terminal"
+      },
+      "explanations": {
+        "a": "Incorrect. This shows NRF perspective only.",
+        "b": "Correct. NF side messages are viewed from its Configuration Panel.",
+        "c": "Incorrect. Service Bus logs are not used here.",
+        "d": "Incorrect. UE terminal is unrelated."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What information does the NRF display when an NF deregisters?",
+      "answers": {
+        "a": "Only the deregistration time",
+        "b": "Only the NF name",
+        "c": "Which NF requested deregistration and related details",
+        "d": "No information is shown"
+      },
+      "explanations": {
+        "a": "Incorrect. More details are shown.",
+        "b": "Incorrect. Details include more than just the name.",
+        "c": "Correct. NRF shows the NF identity and deregistration details.",
+        "d": "Incorrect. Information is clearly displayed."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the impact of NF deregistration on discovery results?",
+      "answers": {
+        "a": "The NF is still discoverable",
+        "b": "Discovery fails completely",
+        "c": "The deregistered NF is excluded from discovery responses",
+        "d": "All NFs are removed from discovery"
+      },
+      "explanations": {
+        "a": "Incorrect. Deregistered NFs are not returned.",
+        "b": "Incorrect. Discovery continues for other NFs.",
+        "c": "Correct. Deregistered NFs are excluded.",
+        "d": "Incorrect. Only the deregistered NF is affected."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which visual behavior confirms automatic deployment is in progress?",
+      "answers": {
+        "a": "All NFs appear at once",
+        "b": "Topology remains static",
+        "c": "Network Functions appear one by one in the topology",
+        "d": "Only logs are updated"
+      },
+      "explanations": {
+        "a": "Incorrect. Deployment is sequential.",
+        "b": "Incorrect. The topology updates dynamically.",
+        "c": "Correct. NFs appear one by one during deployment.",
+        "d": "Incorrect. Visual updates are present."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which button is used to confirm viewing of registration messages?",
+      "answers": {
+        "a": "Deploy",
+        "b": "Start NF",
+        "c": "Show Registration Message",
+        "d": "Validate Topology"
+      },
+      "explanations": {
+        "a": "Incorrect. Deploy starts services.",
+        "b": "Incorrect. Start NF does not show messages.",
+        "c": "Correct. This button displays registration details.",
+        "d": "Incorrect. Validation is unrelated."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which of the following Network Functions is included in the automatic deployment list?",
+      "answers": {
+        "a": "DNS Server",
+        "b": "Firewall",
+        "c": "NRF",
+        "d": "Load Balancer"
+      },
+      "explanations": {
+        "a": "Incorrect. DNS is not listed.",
+        "b": "Incorrect. Firewall is not included.",
+        "c": "Correct. NRF is part of the deployment.",
+        "d": "Incorrect. Load Balancer is not mentioned."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What confirms that an NF is successfully registered with the NRF?",
+      "answers": {
+        "a": "NF appears in discovery results",
+        "b": "NF restarts automatically",
+        "c": "Topology view disappears",
+        "d": "UE disconnects"
+      },
+      "explanations": {
+        "a": "Correct. Successful registration makes the NF discoverable.",
+        "b": "Incorrect. Restart is unrelated.",
+        "c": "Incorrect. Topology remains visible.",
+        "d": "Incorrect. UE behavior is unrelated."
       },
       "correctAnswer": "a",
       "difficulty": "beginner"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "Why is NRF verification important during discovery after deregistration?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "To restart deregistered NFs",
+        "b": "To ensure only active NFs are returned",
+        "c": "To log UE traffic",
+        "d": "To reconfigure Service Bus connections"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect. NRF does not restart NFs.",
+        "b": "Correct. NRF ensures only registered and active NFs are discoverable.",
+        "c": "Incorrect. UE traffic logging is not the purpose.",
+        "d": "Incorrect. Service Bus configuration is unchanged."
       },
-      "correctAnswer": "c",
+      "correctAnswer": "b",
       "difficulty": "beginner"
     }
   ]
