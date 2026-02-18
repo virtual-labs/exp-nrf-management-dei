@@ -1,0 +1,260 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "The 5G Core Network is based on which type of architecture?",
+      "answers": {
+        "a": "Circuit-switched architecture",
+        "b": "Service-Based Architecture",
+        "c": "Monolithic architecture",
+        "d": "Client-server model"
+      },
+      "explanations": {
+        "a": "Incorrect. Circuit-switched architecture is used in legacy networks.",
+        "b": "Correct. 5G Core is designed using Service-Based Architecture (SBA).",
+        "c": "Incorrect. 5G Core is modular, not monolithic.",
+        "d": "Incorrect. SBA goes beyond a simple client-server model."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What does NRF stand for in the 5G Core Network?",
+      "answers": {
+        "a": "Network Routing Function",
+        "b": "Network Repository Function",
+        "c": "Node Registration Framework",
+        "d": "Network Relay Feature"
+      },
+      "explanations": {
+        "a": "Incorrect. NRF is not related to routing.",
+        "b": "Correct. NRF stands for Network Repository Function.",
+        "c": "Incorrect. This is not a 3GPP-defined term.",
+        "d": "Incorrect. NRF is not a relay feature."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which protocol is used for Service-Based Interface (SBI) communication in the 5G Core?",
+      "answers": {
+        "a": "HTTP/1.1",
+        "b": "HTTP/2",
+        "c": "FTP",
+        "d": "MQTT"
+      },
+      "explanations": {
+        "a": "Incorrect. HTTP/1.1 lacks multiplexing support.",
+        "b": "Correct. 5G SBI uses HTTP/2.",
+        "c": "Incorrect. FTP is not used for SBI.",
+        "d": "Incorrect. MQTT is not used in 5G Core SBI."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the primary purpose of the NRF?",
+      "answers": {
+        "a": "Managing user data",
+        "b": "Acting as a service registry for Network Functions",
+        "c": "Providing radio access",
+        "d": "Forwarding user packets"
+      },
+      "explanations": {
+        "a": "Incorrect. User data is managed by UDM/UDR.",
+        "b": "Correct. NRF acts as a service registry for NFs.",
+        "c": "Incorrect. Radio access is handled by gNB.",
+        "d": "Incorrect. User packet forwarding is handled by UPF."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "When a Network Function registers with the NRF, which HTTP method is used?",
+      "answers": {
+        "a": "GET",
+        "b": "POST",
+        "c": "PUT",
+        "d": "DELETE"
+      },
+      "explanations": {
+        "a": "Incorrect. GET is used for retrieval.",
+        "b": "Correct. POST is used for NF registration.",
+        "c": "Incorrect. PUT is used for updates.",
+        "d": "Incorrect. DELETE is used for deregistration."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which network function typically handles authentication in the 5G Core?",
+      "answers": {
+        "a": "AMF",
+        "b": "SMF",
+        "c": "AUSF",
+        "d": "PCF"
+      },
+      "explanations": {
+        "a": "Incorrect. AMF coordinates authentication but does not perform it.",
+        "b": "Incorrect. SMF handles session management.",
+        "c": "Correct. AUSF performs authentication.",
+        "d": "Incorrect. PCF handles policy control."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What kind of response indicates successful registration of a Network Function?",
+      "answers": {
+        "a": "200 OK",
+        "b": "201 Created",
+        "c": "400 Bad Request",
+        "d": "404 Not Found"
+      },
+      "explanations": {
+        "a": "Incorrect. 200 indicates success but not creation.",
+        "b": "Correct. 201 Created confirms successful NF registration.",
+        "c": "Incorrect. 400 indicates a client error.",
+        "d": "Incorrect. 404 indicates a missing resource."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the purpose of Network Function Discovery?",
+      "answers": {
+        "a": "To allocate IP addresses",
+        "b": "To find available Network Functions offering required services",
+        "c": "To authenticate users",
+        "d": "To disconnect Network Functions"
+      },
+      "explanations": {
+        "a": "Incorrect. IP allocation is handled elsewhere.",
+        "b": "Correct. NF Discovery allows NFs to locate required services.",
+        "c": "Incorrect. Authentication is handled by AUSF.",
+        "d": "Incorrect. Discovery does not disconnect NFs."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which HTTP method is used for Network Function deregistration?",
+      "answers": {
+        "a": "GET",
+        "b": "PUT",
+        "c": "POST",
+        "d": "DELETE"
+      },
+      "explanations": {
+        "a": "Incorrect. GET is read-only.",
+        "b": "Incorrect. PUT is used for updates.",
+        "c": "Incorrect. POST is used for registration.",
+        "d": "Correct. DELETE is used for NF deregistration."
+      },
+      "correctAnswer": "d",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What information does a Network Function provide during registration?",
+      "answers": {
+        "a": "Only its IP address",
+        "b": "NF type, ID, address, and services provided",
+        "c": "Only network bandwidth",
+        "d": "Only log file name"
+      },
+      "explanations": {
+        "a": "Incorrect. More detailed information is required.",
+        "b": "Correct. NRF stores NF identity, type, and services.",
+        "c": "Incorrect. Bandwidth alone is insufficient.",
+        "d": "Incorrect. Log files are not part of registration."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What does the heartbeat timer represent in NRF management?",
+      "answers": {
+        "a": "The speed of the network",
+        "b": "The time interval to confirm the NF is alive",
+        "c": "The user’s data plan limit",
+        "d": "The signal strength value"
+      },
+      "explanations": {
+        "a": "Incorrect. Heartbeat is unrelated to speed.",
+        "b": "Correct. It ensures the NF is still active.",
+        "c": "Incorrect. Data plans are unrelated.",
+        "d": "Incorrect. Signal strength is a RAN concept."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What tool is commonly used to capture and analyze SBI messages?",
+      "answers": {
+        "a": "Android Studio",
+        "b": "Wireshark",
+        "c": "MATLAB",
+        "d": "Packet Tracer"
+      },
+      "explanations": {
+        "a": "Incorrect. Android Studio is for app development.",
+        "b": "Correct. Wireshark is widely used for protocol analysis.",
+        "c": "Incorrect. MATLAB is for simulation and analysis.",
+        "d": "Incorrect. Packet Tracer is a learning tool."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "The Network Repository Function stores details about:",
+      "answers": {
+        "a": "Subscriber profiles",
+        "b": "Network Function instances",
+        "c": "User data and calls",
+        "d": "RAN cell IDs"
+      },
+      "explanations": {
+        "a": "Incorrect. Subscriber profiles are stored in UDR.",
+        "b": "Correct. NRF stores NF instance information.",
+        "c": "Incorrect. User data is handled by UPF.",
+        "d": "Incorrect. RAN cell IDs belong to the access network."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the transport protocol used by HTTP/2 in the 5G Core?",
+      "answers": {
+        "a": "UDP",
+        "b": "TCP",
+        "c": "SCTP",
+        "d": "RTP"
+      },
+      "explanations": {
+        "a": "Incorrect. HTTP/2 does not run over UDP.",
+        "b": "Correct. HTTP/2 uses TCP as the transport protocol.",
+        "c": "Incorrect. SCTP is not used for SBI.",
+        "d": "Incorrect. RTP is for media streaming."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which open-source platform provides an NRF implementation for experimentation?",
+      "answers": {
+        "a": "Wireshark",
+        "b": "OpenAirInterface (OAI)",
+        "c": "Cisco Packet Tracer",
+        "d": "Mininet"
+      },
+      "explanations": {
+        "a": "Incorrect. Wireshark is a protocol analyzer.",
+        "b": "Correct. OAI provides 5G Core components including NRF.",
+        "c": "Incorrect. Packet Tracer is for networking basics.",
+        "d": "Incorrect. Mininet is for SDN emulation."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    }
+  ]
+}
