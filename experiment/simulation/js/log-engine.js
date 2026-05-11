@@ -49,18 +49,19 @@ class LogEngine {
 
     getDefaultDependencies() {
         return {
-            'NRF': { required: [], optional: [] },
-            'AMF': { required: ['NRF'], optional: ['AUSF', 'UDM'] },
-            'SMF': { required: ['NRF'], optional: ['UPF', 'PCF'] },
-            'UPF': { required: ['NRF'], optional: [] },
-            'AUSF': { required: ['NRF', 'UDM'], optional: [] },
-            'UDM': { required: ['NRF'], optional: ['MySQL'] },
-            'PCF': { required: ['NRF'], optional: [] },
-            'NSSF': { required: ['NRF'], optional: [] },
-            'UDR': { required: ['NRF'], optional: [] },
-            'gNB': { required: ['AMF', 'UPF'], optional: [] },
-            'UE': { required: ['gNB'], optional: [] },
-            'MySQL': { required: [], optional: ['UDM'] }
+            'NRF':   { required: [],              optional: [] },
+            'AMF':   { required: ['NRF'],         optional: ['AUSF', 'UDM'] },
+            'SMF':   { required: ['NRF'],         optional: ['UPF', 'PCF'] },
+            'UPF':   { required: ['NRF'],         optional: [] },
+            'AUSF':  { required: ['NRF', 'UDM'],  optional: [] },
+            'UDM':   { required: ['NRF'],         optional: ['MySQL'] },
+            'PCF':   { required: ['NRF'],         optional: [] },
+            'NSSF':  { required: ['NRF'],         optional: [] },
+            'UDR':   { required: ['NRF'],         optional: [] },
+            'gNB':   { required: ['AMF', 'UPF'],  optional: [] },
+            'UE':    { required: ['gNB'],         optional: [] },
+            'MySQL': { required: [],              optional: ['UDM'] },
+            'ext-dn':{ required: [],              optional: ['UPF'] }
         };
     }
 
@@ -258,7 +259,7 @@ class LogEngine {
         // FINAL STATUS
         // ==================================
         if (scenario.final_status) {
-            const depInfo = this.dependencies[nf.type];
+            const depInfo = this.dependencies?.[nf.type] || { required: [], optional: [] };
             let hasErrors = false;
             let hasWarnings = false;
 

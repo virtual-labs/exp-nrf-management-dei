@@ -606,6 +606,8 @@ class UIController {
 
         console.log('✅ Topology cleared');
         alert('Topology cleared successfully!');
+        // Full refresh ensures complete re-initialization of all managers and UI state
+        window.location.reload();
     }
 
     /**
@@ -981,14 +983,11 @@ class UIController {
                 
                 <button class="btn btn-danger btn-block" id="btn-delete-nf" style="margin-top: 15px;">Delete UE</button>
                 
-                <div class="troubleshoot-section">
-                    <h4>🔧 Troubleshoot</h4>
-                    <p class="config-hint">Open Windows-style terminal for network diagnostics</p>
-                    
-                    <button class="btn btn-terminal btn-block" id="btn-open-terminal">
-                        💻 Open Command Prompt
-                    </button>
-                </div>
+                
+                <button class="btn btn-terminal btn-block" id="btn-open-terminal">
+                    💻 Open Command Prompt
+                </button>
+               
             `;
         } else {
             // Standard configuration for other NF types
@@ -1024,7 +1023,7 @@ class UIController {
                 
                 
                 <button class="btn btn-primary btn-block" id="btn-save-config">Save Changes</button>
-                <button class="btn btn-danger btn-block" id="btn-delete-nf">Delete NF</button>
+                <button class="btn btn-danger btn-block" id="btn-delete-nf">Delete </button>
                 ${!['NRF', 'gNB', 'UE', 'ext-dn', 'MySQL'].includes(nf.type) ? `
                 <div class="form-group" style="margin-top: 15px;">
                     <h4>📋 NRF Registration</h4>
@@ -1057,14 +1056,11 @@ class UIController {
             </div>
             ` : ''}
             
-            <div class="troubleshoot-section">
-                <h4>🔧 Troubleshoot</h4>
-                <p class="config-hint">Open Windows-style terminal for network diagnostics</p>
-                
-                <button class="btn btn-terminal btn-block" id="btn-open-terminal">
-                    💻 Open Command Prompt
-                </button>
-            </div>
+            
+            <button class="btn btn-terminal btn-block" id="btn-open-terminal">
+                💻 Open Command Prompt
+            </button>
+            
         `;
         }
 
@@ -1495,8 +1491,8 @@ class UIController {
      * @param {Object} nf - Network Function
      */
     autoConnectToBusIfApplicable(nf) {
-        // Don't auto-connect UPF, gNB, and UE as per requirement
-        const excludedTypes = ['UPF', 'gNB', 'UE'];
+        // Don't auto-connect UPF, ext-dn, gNB, and UE as per requirement
+        const excludedTypes = ['UPF', 'ext-dn', 'gNB', 'UE'];
 
         if (excludedTypes.includes(nf.type)) {
             console.log(`🚫 Skipping auto-connect for ${nf.type} (excluded type)`);
@@ -2380,30 +2376,16 @@ class UIController {
         const nf = window.dataStore?.getNFById(nfId);
         if (!nf) return;
 
-        // Terminal constraints: allow at most two windows (UE + ext-dn combo)
-        const openWindows = Array.from(document.querySelectorAll('.windows-terminal-window'));
-        const typesOpen = new Set(openWindows.map(w => w.dataset.terminalType));
-        const isUEorExt = nf.type === 'UE' || nf.type === 'ext-dn';
-        if (isUEorExt) {
-            if (typesOpen.size >= 2) {
-                alert('Only two terminals allowed at once: one UE and one ext-dn.');
-                return;
-            }
-            if (typesOpen.size === 1) {
-                const existing = [...typesOpen][0];
-                if (existing === nf.type) {
-                    alert(`Second terminal must be the other type (${nf.type === 'UE' ? 'ext-dn' : 'UE'}).`);
-                    return;
-                }
-            }
-        }
+        // Only one NF terminal open at a time — close any existing one first
+        const existingModals = document.querySelectorAll('[id^="windows-terminal-modal-"]');
+        existingModals.forEach(m => m.remove());
 
         // Create terminal modal
         this.createTerminalModal(nf);
     }
 
     /**
-     * Create Windows-style terminal modal
+     * Create Windows-style terminal modal with realistic inline input
      * @param {Object} nf - Network Function
      */
     createTerminalModal(nf) {
@@ -2420,13 +2402,14 @@ class UIController {
         const terminalModal = document.createElement('div');
         terminalModal.id = modalId;
         terminalModal.className = 'windows-terminal-modal';
+        terminalModal.dataset.nfId = nf.id;
 
         terminalModal.innerHTML = `
-            <div class="windows-terminal-window" data-terminal-type="${nf.type}" style="position:absolute; left: 10vw; top: 10vh;">
+            <div class="windows-terminal-window" data-terminal-type="${nf.type}">
                 <div class="windows-terminal-titlebar">
                     <div class="terminal-title">
-                        <span class="terminal-icon">⬛</span>
-                        Command Prompt - ${nf.name} (${nf.config.ipAddress})
+                        <span class="terminal-icon">🖥️</span>
+                        Terminal - ${nf.name} (${nf.config.ipAddress})
                     </div>
                     <div class="terminal-controls">
                         <button class="terminal-btn minimize">−</button>
@@ -2435,15 +2418,8 @@ class UIController {
                     </div>
                 </div>
                 <div class="windows-terminal-content" id="terminal-content">
-                    <div class="terminal-header">
-                        Microsoft Windows [Version 10.0.19045.3570]<br>
-                        (c) Microsoft Corporation. All rights reserved.<br><br>
-                    </div>
-                    <div class="terminal-output" id="terminal-output"></div>
-                    <div class="terminal-input-line">
-                        <span class="terminal-prompt">C:\\${nf.name}></span>
-                        <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false">
-                    </div>
+                    
+                    <div class="terminal-output" id="terminal-output-${nf.id}"></div>
                 </div>
             </div>
         `;
@@ -2458,26 +2434,69 @@ class UIController {
             terminalModal.classList.add('show');
         }, 10);
 
-        // Focus on input
-        const input = document.getElementById('terminal-input');
-        if (input) {
-            input.focus();
-        }
+        // Create initial input line
+        this.createNFInputLine(nf);
     }
 
     /**
-     * Setup Windows terminal functionality
+     * Create inline input line for NF terminal
+     * @param {Object} nf - Network Function
+     */
+    createNFInputLine(nf) {
+        const output = document.getElementById(`terminal-output-${nf.id}`);
+        if (!output) return;
+
+        // Create input line container
+        const inputLine = document.createElement('div');
+        inputLine.className = 'terminal-input-line';
+        inputLine.id = `nf-input-line-${nf.id}`;
+
+        // Create prompt
+        const prompt = document.createElement('span');
+        prompt.className = 'terminal-prompt';
+        prompt.textContent = `${nf.name.toLowerCase()}>`;
+
+        // Create editable input span (inline)
+        const input = document.createElement('span');
+        input.className = 'terminal-input';
+        input.id = `nf-input-${nf.id}`;
+        input.contentEditable = true;
+        input.spellcheck = false;
+        input.autocomplete = 'off';
+        input.autocapitalize = 'off';
+        input.autocorrect = 'off';
+
+        // Assemble input line
+        inputLine.appendChild(prompt);
+        inputLine.appendChild(input);
+        output.appendChild(inputLine);
+
+        // Scroll to bottom
+        output.scrollTop = output.scrollHeight;
+
+        // Focus the input
+        input.focus();
+
+        return input;
+    }
+
+    /**
+     * Setup Windows terminal functionality with inline input
      * @param {Object} nf - Network Function
      * @param {HTMLElement} terminalModal - Terminal modal element
      */
     setupWindowsTerminal(nf, terminalModal) {
         const win = terminalModal.querySelector('.windows-terminal-window');
-        const input = terminalModal.querySelector('#terminal-input');
-        const output = terminalModal.querySelector('#terminal-output');
+        const output = document.getElementById(`terminal-output-${nf.id}`);
         const closeBtn = terminalModal.querySelector('#terminal-close');
 
-        let commandHistory = [];
-        let historyIndex = -1;
+        // Command history for this NF terminal
+        if (!this.nfCommandHistory) this.nfCommandHistory = {};
+        if (!this.nfCommandHistory[nf.id]) {
+            this.nfCommandHistory[nf.id] = [];
+        }
+        if (!this.nfHistoryIndex) this.nfHistoryIndex = {};
+        this.nfHistoryIndex[nf.id] = -1;
 
         // Close button - cleanup iperf3 server if running
         closeBtn.addEventListener('click', () => {
@@ -2538,54 +2557,155 @@ class UIController {
             resizing = false;
         });
 
-        // Input handling
-        input.addEventListener('keydown', async (e) => {
-            // Handle Ctrl+C to stop iperf3 server
-            if (e.ctrlKey && e.key === 'c' && this.iperf3Servers.has(nf.id)) {
-                e.preventDefault();
-                this.stopIperf3Server(nf, output);
-                input.value = '';
-                return;
-            }
+        // Setup input handler for inline input
+        this.setupNFInputHandler(nf, output);
 
-            if (e.key === 'Enter') {
-                const command = input.value.trim();
-                if (command) {
-                    // Add to history
-                    commandHistory.push(command);
-                    historyIndex = commandHistory.length;
-
-                    // Display command
-                    this.addTerminalLine(output, `C:\\${nf.name}>${command}`, 'command');
-
-                    // Clear input
-                    input.value = '';
-
-                    // Process command
-                    await this.processWindowsCommand(nf, command, output);
+        // Ensure input is always focused when clicking in the terminal
+        const content = terminalModal.querySelector('.windows-terminal-content');
+        if (content) {
+            content.addEventListener('click', (e) => {
+                // Don't focus if clicking on a button or selecting text
+                if (e.target.tagName === 'BUTTON' || window.getSelection().toString().length > 0) {
+                    return;
                 }
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                if (historyIndex > 0) {
-                    historyIndex--;
-                    input.value = commandHistory[historyIndex];
+                const input = document.getElementById(`nf-input-${nf.id}`);
+                if (input) {
+                    input.focus();
                 }
-            } else if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                if (historyIndex < commandHistory.length - 1) {
-                    historyIndex++;
-                    input.value = commandHistory[historyIndex];
-                } else {
-                    historyIndex = commandHistory.length;
-                    input.value = '';
-                }
-            }
-        });
+            });
+        }
 
         // Initial welcome message
         this.addTerminalLine(output, `Connected to ${nf.name} (${nf.config.ipAddress})`, 'info');
         this.addTerminalLine(output, 'Type "help" for available commands.', 'info');
         this.addTerminalLine(output, '', 'blank');
+    }
+
+    /**
+     * Setup input handler for NF terminal
+     * @param {Object} nf - Network Function
+     * @param {HTMLElement} output - Output element
+     */
+    setupNFInputHandler(nf, output) {
+        // Available commands for NF terminal autocomplete
+        const availableCommands = [
+            'help',
+            'ifconfig',
+            'ping',
+            'ping subnet',
+            'cls',
+            'clear',
+            'exit',
+            'systeminfo',
+            'netstat',
+            'ip addr',
+            'iperf3 -s',
+            'iperf3 -c'
+        ];
+
+        // Use event delegation on the output container
+        output.addEventListener('keydown', async (e) => {
+            const input = e.target;
+            if (!input.classList.contains('terminal-input')) return;
+
+            const history = this.nfCommandHistory[nf.id];
+            let historyIndex = this.nfHistoryIndex[nf.id];
+
+            // Handle Ctrl+C to stop iperf3 server
+            if (e.ctrlKey && e.key === 'c' && this.iperf3Servers.has(nf.id)) {
+                e.preventDefault();
+                this.stopIperf3Server(nf, output);
+                this.createNFInputLine(nf);
+                return;
+            }
+
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const command = input.textContent.trim();
+
+                // Remove the input line (will be replaced with static command line)
+                const inputLine = input.parentElement;
+                inputLine.remove();
+
+                if (command) {
+                    // Add to history
+                    history.push(command);
+                    this.nfHistoryIndex[nf.id] = history.length;
+
+                    // Display the command as a static line
+                    this.addTerminalLine(output, `${nf.name.toLowerCase()}>${command}`, 'command');
+
+                    // Process command
+                    try {
+                        await this.processWindowsCommand(nf, command, output);
+                    } catch (err) {
+                        console.error('NF terminal command error:', err);
+                        this.addTerminalLine(output, `Error executing command: ${command}`, 'error');
+                        this.addTerminalLine(output, '', 'blank');
+                    }
+                }
+
+                // Create new input line
+                this.createNFInputLine(nf);
+
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    this.nfHistoryIndex[nf.id] = historyIndex;
+                    input.textContent = history[historyIndex];
+                    this.moveCursorToEnd(input);
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    this.nfHistoryIndex[nf.id] = historyIndex;
+                    input.textContent = history[historyIndex];
+                    this.moveCursorToEnd(input);
+                } else {
+                    this.nfHistoryIndex[nf.id] = history.length;
+                    input.textContent = '';
+                }
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                const currentText = input.innerText;
+                const endsWithSpace = currentText.endsWith(' ');
+                const tokens = currentText.trim().split(/\s+/).filter(Boolean);
+
+                const matches = availableCommands.filter(cmd =>
+                    cmd.toLowerCase().startsWith(currentText.trim().toLowerCase())
+                );
+
+                if (matches.length === 0) return;
+
+                // Cycle through matches on repeated Tab
+                if (!this._nfTabState || this._nfTabState.input !== currentText.trim()) {
+                    this._nfTabState = { input: currentText.trim(), index: 0, matches };
+                } else {
+                    this._nfTabState.index = (this._nfTabState.index + 1) % matches.length;
+                }
+
+                const newText = this._nfTabState.matches[this._nfTabState.index] + ' ';
+                input.innerHTML = '';
+                input.appendChild(document.createTextNode(newText));
+                this._nfTabState.input = newText.trim();
+                this.moveCursorToEnd(input);
+            }
+        });
+    }
+
+    /**
+     * Move cursor to end of contenteditable element
+     * @param {HTMLElement} element - Contenteditable element
+     */
+    moveCursorToEnd(element) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(element);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
     }
 
     /**
@@ -2600,8 +2720,8 @@ class UIController {
 
         if (cmd === 'help' || cmd === '?') {
             this.showWindowsHelp(output);
-        } else if (cmd === 'ipconfig') {
-            this.showIPConfig(nf, output);
+        } else if (cmd === 'ifconfig') {
+            this.showifconfig(nf, output);
         } else if (cmd.startsWith('ping ')) {
             // Parse ping command with -I and -c options
             await this.executeLinuxPing(nf, command, output);
@@ -2612,8 +2732,6 @@ class UIController {
         } else if (cmd === 'exit') {
             const closeBtn = document.getElementById('terminal-close');
             if (closeBtn) closeBtn.click();
-        } else if (cmd === 'dir') {
-            this.showDirectory(output);
         } else if (cmd === 'systeminfo') {
             this.showSystemInfo(nf, output);
         } else if (cmd === 'netstat') {
@@ -2657,7 +2775,7 @@ class UIController {
             'Available commands:',
             '',
             'HELP        - Display this help message',
-            'IPCONFIG    - Display network configuration (Windows style)',
+            'ifconfig    - Display network configuration (Windows style)',
             'IFCONFIG    - Display network interfaces (Linux style)',
             'PING        - Test network connectivity',
             '  Format:   ping -I <interface> <target> [-c<count>]',
@@ -2686,7 +2804,7 @@ class UIController {
      * @param {Object} nf - Network Function
      * @param {HTMLElement} output - Output element
      */
-    showIPConfig(nf, output) {
+    showifconfig(nf, output) {
         const lines = [
             'Windows IP Configuration',
             '',

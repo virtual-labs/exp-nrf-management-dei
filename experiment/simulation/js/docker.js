@@ -186,41 +186,39 @@ class DockerTerminal {
 
     /**
      * Open Docker terminal modal
+     * @param {string} nfId - Optional NF ID for NF-specific terminal
+     * @param {string} nfName - Optional NF name for terminal title
      */
-    openTerminal() {
+    openTerminal(nfId = null, nfName = null) {
         // Remove existing terminal if any
         const existingTerminal = document.getElementById('docker-terminal-modal');
         if (existingTerminal) {
             existingTerminal.remove();
         }
 
+        // Determine terminal ID and title
+        const terminalId = nfId ? `docker-terminal-${nfId}` : 'docker-terminal-main';
+        const terminalTitle = nfName ? `Docker Terminal - ${nfName}` : 'Docker Terminal - Main Terminal';
+        const promptText = nfName ? `docker@${nfName.toLowerCase()}>` : 'docker@main>';
+
         // Create terminal modal
         const terminalModal = document.createElement('div');
         terminalModal.id = 'docker-terminal-modal';
         terminalModal.className = 'docker-terminal-modal';
+        terminalModal.dataset.terminalId = terminalId;
         terminalModal.innerHTML = `
             <div class="docker-terminal-window" id="docker-terminal-window">
                 <div class="docker-terminal-titlebar" id="docker-terminal-titlebar">
                     <div class="docker-terminal-title">
                         <span class="docker-terminal-icon">🐳</span>
-                        Docker Terminal - Main Terminal
+                        ${terminalTitle}
                     </div>
                     <div class="docker-terminal-controls">
-                        <button class="docker-terminal-btn minimize" id="docker-terminal-minimize" title="Minimize">−</button>
-                        <button class="docker-terminal-btn maximize" id="docker-terminal-maximize" title="Maximize">□</button>
                         <button class="docker-terminal-btn close" id="docker-terminal-close" title="Close">×</button>
                     </div>
                 </div>
                 <div class="docker-terminal-content" id="docker-terminal-content">
-                    <div class="docker-terminal-header">
-                        Docker Terminal v1.0<br>
-                        Type 'help' for available commands<br><br>
-                    </div>
                     <div class="docker-terminal-output" id="docker-terminal-output"></div>
-                    <div class="docker-terminal-input-line">
-                        <span class="docker-terminal-prompt">docker@main></span>
-                        <input type="text" id="docker-terminal-input" class="docker-terminal-input" autocomplete="off" spellcheck="false">
-                    </div>
                 </div>
                 <div class="docker-terminal-resize-handle" id="docker-terminal-resize-handle"></div>
             </div>
@@ -228,8 +226,8 @@ class DockerTerminal {
 
         document.body.appendChild(terminalModal);
 
-        // Setup terminal functionality
-        this.setupTerminal(terminalModal);
+        // Setup terminal functionality with inline input
+        this.setupTerminal(terminalModal, terminalId, promptText);
 
         // Setup dragging, resizing, and window controls
         this.setupWindowControls(terminalModal);
@@ -242,24 +240,68 @@ class DockerTerminal {
             terminalModal.classList.add('show');
         }, 10);
 
-        // Focus on input
-        const input = document.getElementById('docker-terminal-input');
-        if (input) {
-            input.focus();
-        }
+        // Create initial input line and focus
+        this.createInputLine(terminalId, promptText);
+    }
+
+    /**
+     * Create a new input line in the terminal
+     * @param {string} terminalId - Terminal ID
+     * @param {string} promptText - Prompt text to display
+     */
+    createInputLine(terminalId, promptText) {
+        const output = document.getElementById('docker-terminal-output');
+        if (!output) return;
+
+        // Create input line container
+        const inputLine = document.createElement('div');
+        inputLine.className = 'docker-terminal-input-line';
+        inputLine.id = `${terminalId}-input-line`;
+
+        // Create prompt
+        const prompt = document.createElement('span');
+        prompt.className = 'docker-terminal-prompt';
+        prompt.textContent = promptText;
+
+        // Create editable input span (inline)
+        const input = document.createElement('span');
+        input.className = 'docker-terminal-input';
+        input.id = `${terminalId}-input`;
+        input.contentEditable = true;
+        input.spellcheck = false;
+        input.autocomplete = 'off';
+        input.autocapitalize = 'off';
+        input.autocorrect = 'off';
+
+        // Assemble input line
+        inputLine.appendChild(prompt);
+        inputLine.appendChild(input);
+        output.appendChild(inputLine);
+
+        // Scroll to bottom and focus without letting browser scroll elsewhere
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                output.scrollTop = output.scrollHeight;
+                input.focus({ preventScroll: true });
+            });
+        });
+
+        return input;
     }
 
     /**
      * Setup Docker terminal functionality
      * @param {HTMLElement} terminalModal - Terminal modal element
+     * @param {string} terminalId - Terminal ID
+     * @param {string} promptText - Prompt text
      */
-    setupTerminal(terminalModal) {
-        const input = document.getElementById('docker-terminal-input');
+    setupTerminal(terminalModal, terminalId, promptText) {
         const output = document.getElementById('docker-terminal-output');
         const closeBtn = document.getElementById('docker-terminal-close');
 
-        let commandHistory = [];
-        let historyIndex = -1;
+        // Command history for this terminal
+        this.commandHistory = this.commandHistory || [];
+        this.historyIndex = -1;
 
         // Close button
         closeBtn.addEventListener('click', () => {
@@ -277,56 +319,224 @@ class DockerTerminal {
             }
         });
 
-        // Input handling
-        input.addEventListener('keydown', async (e) => {
-            // Handle Ctrl+C to stop watch mode
+        // Initial welcome message
+        this.addTerminalLine(output, '5G WIRELESS LAB', 'info');
+        this.addTerminalLine(output, 'Type "help" for available commands.', 'info');
+        this.addTerminalLine(output, '', 'blank');
+
+        // Setup global key handler for the terminal
+        this.setupTerminalInputHandler(terminalId, promptText);
+    }
+
+    /**
+     * Setup input handler for the terminal
+     * @param {string} terminalId - Terminal ID
+     * @param {string} promptText - Prompt text
+     */
+    setupTerminalInputHandler(terminalId, promptText) {
+        const output = document.getElementById('docker-terminal-output');
+
+        const ALL_COMMANDS = [
+            'help',
+            'ls', 'll',
+            'vi docker-compose.yml', 'cat docker-compose.yml',
+            'status', 'check', 'clear', 'cls', 'exit',
+            'docker ps',
+            'docker network ls',
+            'docker network inspect',
+            'docker version',
+            'docker start',
+            'docker stop',
+            'docker compose -f docker-compose.yml up -d',
+            'docker compose -f docker-compose-gnb.yml up -d',
+            'docker compose -f docker-compose-ue.yml up -d',
+            'docker compose -f docker-compose.yml down',
+            'docker compose -f docker-compose-gnb.yml down',
+            'docker compose -f docker-compose-ue.yml down',
+            'watch docker compose -f docker-compose.yml ps -a'
+        ];
+
+        // tab cycle state — persists across new input lines
+        let tab = null; // { base, sep, options, index, active }
+
+        const getInput = () => document.getElementById(`${terminalId}-input`);
+
+        // Always scroll output to bottom after any input manipulation
+        const scrollToBottom = () => {
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    output.scrollTop = output.scrollHeight;
+                });
+            });
+        };
+
+        const writeInput = (text) => {
+            const el = getInput();
+            if (!el) return;
+            el.innerHTML = '';
+            el.appendChild(document.createTextNode(text));
+            this.moveCursorToEnd(el);
+            scrollToBottom();
+        };
+
+        output.addEventListener('keydown', async (e) => {
+            const input = e.target;
+            if (!input.classList.contains('docker-terminal-input')) return;
+
+            // Any non-Tab key kills tab cycle
+            if (e.key !== 'Tab') tab = null;
+
             if (e.ctrlKey && e.key === 'c' && this.isWatching) {
                 e.preventDefault();
                 this.stopWatch();
                 this.addTerminalLine(output, '', 'blank');
                 this.addTerminalLine(output, 'Watch mode stopped.', 'info');
                 this.addTerminalLine(output, '', 'blank');
+                // Remove any stale input line and create a fresh one at the bottom
+                const staleInput = output.querySelector('.docker-terminal-input-line');
+                if (staleInput) staleInput.remove();
+                this.createInputLine(terminalId, promptText);
                 return;
             }
 
             if (e.key === 'Enter') {
-                const command = input.value.trim();
+                e.preventDefault();
+                const command = input.textContent.trim();
+                input.parentElement.remove();
                 if (command) {
-                    // Add to history
-                    commandHistory.push(command);
-                    historyIndex = commandHistory.length;
-
-                    // Display command
-                    this.addTerminalLine(output, `docker@main>${command}`, 'command');
-
-                    // Clear input
-                    input.value = '';
-
-                    // Process command
-                    await this.processCommand(command, output);
+                    this.commandHistory.push(command);
+                    this.historyIndex = this.commandHistory.length;
+                    this.addTerminalLine(output, `${promptText}${command}`, 'command');
+                    try {
+                        await this.processCommand(command, output);
+                    } catch (err) {
+                        console.error('Terminal command error:', err);
+                        this.addTerminalLine(output, `Error executing command: ${command}`, 'error');
+                        this.addTerminalLine(output, '', 'blank');
+                    }
                 }
+                this.createInputLine(terminalId, promptText);
+
             } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
-                if (historyIndex > 0) {
-                    historyIndex--;
-                    input.value = commandHistory[historyIndex];
+                if (this.historyIndex > 0) {
+                    this.historyIndex--;
+                    input.textContent = this.commandHistory[this.historyIndex];
+                    this.moveCursorToEnd(input);
                 }
             } else if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                if (historyIndex < commandHistory.length - 1) {
-                    historyIndex++;
-                    input.value = commandHistory[historyIndex];
+                if (this.historyIndex < this.commandHistory.length - 1) {
+                    this.historyIndex++;
+                    input.textContent = this.commandHistory[this.historyIndex];
+                    this.moveCursorToEnd(input);
                 } else {
-                    historyIndex = commandHistory.length;
-                    input.value = '';
+                    this.historyIndex = this.commandHistory.length;
+                    input.textContent = '';
+                }
+
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+
+                if (tab && tab.active) {
+                    tab.index = (tab.index + 1) % tab.options.length;
+                    writeInput(tab.base + tab.options[tab.index] + ' ');
+                    return;
+                }
+
+                // Use raw text — preserve trailing space
+                const raw = input.textContent;
+                const typed = raw.trimEnd();
+                const hasTrailingSpace = raw.endsWith(' ');
+
+                // base = confirmed part, partial = last incomplete word
+                const lastSpace = typed.lastIndexOf(' ');
+                const base = hasTrailingSpace
+                    ? typed + ' '                              // "docker " → base="docker ", partial=""
+                    : (lastSpace === -1 ? '' : typed.slice(0, lastSpace + 1)); // "docker n" → base="docker ", partial="n"
+                const partial = hasTrailingSpace
+                    ? ''
+                    : (lastSpace === -1 ? typed : typed.slice(lastSpace + 1));
+
+                // Find commands that start with base
+                const matches = ALL_COMMANDS.filter(c =>
+                    c.toLowerCase().startsWith(base.toLowerCase())
+                );
+                if (matches.length === 0) return;
+
+                // Next-word options after base, filtered by partial
+                const options = [...new Set(
+                    matches
+                        .map(c => c.slice(base.length).split(' ')[0])
+                        .filter(w => w && w.toLowerCase().startsWith(partial.toLowerCase()))
+                )];
+
+                if (options.length === 0) return;
+
+                if (options.length === 1) {
+                    // Single — complete inline
+                    writeInput(base + options[0] + ' ');
+                    tab = null;
+                } else {
+                    // Find common prefix among options
+                    let common = options[0];
+                    for (let i = 1; i < options.length; i++) {
+                        let j = 0;
+                        while (j < common.length && j < options[i].length &&
+                               common[j].toLowerCase() === options[i][j].toLowerCase()) j++;
+                        common = common.slice(0, j);
+                    }
+                    if (common.length > partial.length) {
+                        // Extend to common prefix silently
+                        writeInput(base + common);
+                        tab = null;
+                    } else {
+                        // Show list + cycle
+                        this.addTerminalLine(output, `${promptText}${raw.trim()}`, 'command');
+                        this.addTerminalLine(output, options.join('   '), 'info');
+                        input.parentElement.remove();
+                        // Remove any other stale input lines before creating fresh one
+                        output.querySelectorAll('.docker-terminal-input-line').forEach(el => el.remove());
+                        this.createInputLine(terminalId, promptText);
+                        writeInput(raw.trim());
+                        tab = { base, options, index: -1, active: true };
+                        scrollToBottom();
+                    }
                 }
             }
         });
 
-        // Initial welcome message
-        this.addTerminalLine(output, 'Welcome to Docker Terminal', 'info');
-        this.addTerminalLine(output, 'Type "help" for available commands.', 'info');
-        this.addTerminalLine(output, '', 'blank');
+        const content = document.getElementById('docker-terminal-content');
+        if (content) {
+            content.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON' || window.getSelection().toString().length > 0) return;
+                const inp = getInput();
+                if (inp) inp.focus();
+            });
+        }
+    }
+
+    /**
+     * Move cursor to end of contenteditable element
+     * @param {HTMLElement} element - Contenteditable element
+     */
+    moveCursorToEnd(element) {
+        // Find the actual scrollable output container
+        const scrollable = element.closest('.docker-terminal-output, .windows-terminal-content');
+
+        const range = document.createRange();
+        const selection = window.getSelection();
+        range.selectNodeContents(element);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Override any browser scroll-into-view caused by the selection
+        if (scrollable) {
+            requestAnimationFrame(() => {
+                scrollable.scrollTop = scrollable.scrollHeight;
+            });
+        }
     }
 
     /**
@@ -340,6 +550,12 @@ class DockerTerminal {
 
         if (cmd === 'help' || cmd === '?') {
             this.showHelp(output);
+        } else if (cmd === 'ls' || cmd === 'll') {
+            this.showDirectoryListing(output);
+        } else if (cmd === 'vi docker-compose.yml' || cmd === 'cat docker-compose.yml' || cmd === 'view docker-compose.yml') {
+            await this.showDockerComposeFile(output);
+        } else if (cmd === 'vi' || cmd === 'vim' || cmd.startsWith('vi ') || cmd.startsWith('vim ')) {
+            await this.showDockerComposeFile(output);
         } else if (cmd === 'status' || cmd === 'check') {
             this.checkSystemStatus(output);
         } else if (cmd === 'docker compose -f docker-compose.yml up -d' || cmd === 'docker-compose -f docker-compose.yml up -d' ||
@@ -351,12 +567,6 @@ class DockerTerminal {
             await this.dockerComposeGnbUp(output);
         } else if (cmd === 'docker compose -f docker-compose-ue.yml up -d' || 
                    cmd === 'docker-compose -f docker-compose-ue.yml up -d') {
-            await this.dockerComposeUeUp(output);
-        } else if (cmd === 'docker compose -f docker-compose-ran.yml up -d oai-ue1' || 
-                   cmd === 'docker-compose -f docker-compose-ran.yml up -d oai-ue1') {
-            await this.dockerComposeUe1Up(output);
-        } else if (cmd === 'docker compose -f docker-compose-ran.yml up -d oai-ue2' || 
-                   cmd === 'docker-compose -f docker-compose-ran.yml up -d oai-ue2') {
             await this.dockerComposeUe2Up(output);
         } else if (cmd === 'docker ps') {
             await this.dockerPS(output);
@@ -462,9 +672,115 @@ class DockerTerminal {
      * Show help
      * @param {HTMLElement} output - Output element
      */
+    showDirectoryListing(output) {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        this.addTerminalLine(output,
+            `docker-compose.yml`,
+            'info'
+        );
+    }
+
+    async showDockerComposeFile(output) {
+        this.openViEditor(DOCKER_COMPOSE_CONTENT);
+    }
+
+    openViEditor(content) {
+        const terminalContent = document.getElementById('docker-terminal-content');
+        const terminalOutput = document.getElementById('docker-terminal-output');
+        if (!terminalContent || !terminalOutput) return;
+
+        terminalOutput.style.display = 'none';
+
+        const viContainer = document.createElement('div');
+        viContainer.id = 'vi-container';
+        viContainer.style.cssText = 'flex:1;display:flex;flex-direction:column;height:100%;overflow:hidden;';
+
+        viContainer.innerHTML = `
+            <div style="background:#000;color:#fff;padding:8px 14px;font-family:'Consolas','Courier New',monospace;font-size:14px;flex:1;overflow-y:auto;white-space:pre;line-height:1.6;" id="vi-content"></div>
+            <div style="background:#1a1a1a;border-top:1px solid #333;padding:3px 12px;font-size:12px;font-family:'Consolas','Courier New',monospace;display:flex;justify-content:space-between;">
+                <span style="color:#aaa;">"docker-compose.yml" [readonly]</span>
+                <span id="vi-cmd-bar" style="color:#fff;"></span>
+                <span style="color:#555;">Type :q to exit</span>
+            </div>
+        `;
+
+        terminalContent.appendChild(viContainer);
+
+        const viContent = document.getElementById('vi-content');
+        const cmdBar = document.getElementById('vi-cmd-bar');
+
+        // Render content with line numbers
+        viContent.innerHTML = content.split('\n').map((line, i) =>
+            `<span style="color:#555;user-select:none;">${String(i + 1).padStart(3, ' ')}  </span>${escapeHtml(line)}`
+        ).join('\n');
+
+        let cmdBuffer = '';
+        let cmdMode = false;
+
+        const closeEditor = () => {
+            viContainer.remove();
+            terminalOutput.style.display = '';
+            const input = terminalOutput.querySelector('.docker-terminal-input');
+            if (input) input.focus();
+        };
+
+        // Capture keypresses on the terminal window
+        const keyHandler = (e) => {
+            if (e.key === ':' && !cmdMode) {
+                e.preventDefault();
+                cmdMode = true;
+                cmdBuffer = ':';
+                cmdBar.textContent = cmdBuffer;
+                return;
+            }
+            if (cmdMode) {
+                e.preventDefault();
+                if (e.key === 'Escape') {
+                    cmdMode = false;
+                    cmdBuffer = '';
+                    cmdBar.textContent = '';
+                    return;
+                }
+                if (e.key === 'Backspace') {
+                    cmdBuffer = cmdBuffer.slice(0, -1);
+                    if (!cmdBuffer) { cmdMode = false; }
+                    cmdBar.textContent = cmdBuffer;
+                    return;
+                }
+                if (e.key === 'Enter') {
+                    const cmd = cmdBuffer.slice(1).trim();
+                    if (cmd === 'q' || cmd === 'q!') {
+                        document.removeEventListener('keydown', keyHandler);
+                        closeEditor();
+                    } else {
+                        cmdBar.textContent = `Not an editor command: ${cmdBuffer}`;
+                        setTimeout(() => { cmdMode = false; cmdBuffer = ''; cmdBar.textContent = ''; }, 1500);
+                    }
+                    return;
+                }
+                cmdBuffer += e.key;
+                cmdBar.textContent = cmdBuffer;
+            }
+        };
+
+        document.addEventListener('keydown', keyHandler);
+
+        function escapeHtml(str) {
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        }
+    }
+
     showHelp(output) {
         const helpText = [
             'Available Docker Commands:',
+            '',
+            '  ls / ll',
+            '    List files in current directory (shows docker-compose.yml)',
+            '',
+            '  vi docker-compose.yml / cat docker-compose.yml',
+            '    View docker-compose.yml file contents',
             '',
             '  docker compose -f docker-compose.yml up -d',
             '    Start all Core Network Functions (one-click deployment)',
@@ -474,12 +790,6 @@ class DockerTerminal {
             '',
             '  docker compose -f docker-compose-ue.yml up -d',
             '    Start both UE containers (oai-ue1 and oai-ue2)',
-            '',
-            '  docker compose -f docker-compose-ran.yml up -d oai-ue1',
-            '    Start only UE1 container',
-            '',
-            '  docker compose -f docker-compose-ran.yml up -d oai-ue2',
-            '    Start only UE2 container',
             '',
             '  docker ps',
             '    Show running Docker containers',
@@ -655,10 +965,21 @@ class DockerTerminal {
         let allNFs = window.dataStore.getAllNFs();
         allNFs = allNFs.filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
 
+        // Sort NFs by startup order (dependencies first)
+        // Priority: MySQL -> NRF -> Database -> Auth Services -> Network Services -> UPF -> ext-dn
+        const startupOrder = ['MySQL', 'NRF', 'UDR', 'UDM', 'AUSF', 'AMF', 'SMF', 'UPF', 'ext-dn'];
+        const sortedNFs = nfsToStart.sort((a, b) => {
+            const indexA = startupOrder.indexOf(a.type);
+            const indexB = startupOrder.indexOf(b.type);
+            const aIndex = indexA !== -1 ? indexA : 999;
+            const bIndex = indexB !== -1 ? indexB : 999;
+            return aIndex - bIndex;
+        });
+
         // Calculate counts
         const totalNFs = allNFs.length;
         const alreadyRunning = existingNFs.length;
-        const newlyCreated = nfsToStart.length;
+        const newlyCreated = sortedNFs.length;
         const networkCount = this.oaiWorkshopNetworkExists ? 0 : 1;
         const totalOperations = networkCount + newlyCreated;
 
@@ -680,8 +1001,8 @@ class DockerTerminal {
             await this.delay(200);
         }
 
-        // Start only newly created NFs (skip already running ones)
-        for (const nf of nfsToStart) {
+        // Start NFs in dependency order
+        for (const nf of sortedNFs) {
             // Skip gNB and UE - they have separate compose files
             if (nf.type === 'gNB' || nf.type === 'UE') {
                 continue;
@@ -706,10 +1027,30 @@ class DockerTerminal {
             };
             const serviceName = serviceNameMap[freshNF.type] || freshNF.type.toLowerCase();
 
-            // Show container creation with timing (random between 0.8s and 2.3s)
-            const randomDelay = (Math.random() * 1.5 + 0.8).toFixed(1); // 0.8s to 2.3s
+            // Show container creation with timing
+            let randomDelay;
+            if (freshNF.type === 'MySQL') {
+                randomDelay = (Math.random() * 1.5 + 2.0).toFixed(1); // 2.0s to 3.5s for MySQL (longer)
+            } else if (freshNF.type === 'UPF') {
+                randomDelay = (Math.random() * 1.5 + 1.5).toFixed(1); // 1.5s to 3.0s for UPF (longer)
+            } else if (freshNF.type === 'ext-dn') {
+                randomDelay = (Math.random() * 1.0 + 1.0).toFixed(1); // 1.0s to 2.0s for ext-dn
+            } else {
+                randomDelay = (Math.random() * 1.5 + 0.8).toFixed(1); // 0.8s to 2.3s for others
+            }
+            
             this.addTerminalLine(output, ` ✔ Container ${serviceName.padEnd(16)} Started${' '.repeat(20)}${randomDelay}s`, 'success');
             await this.delay(parseFloat(randomDelay) * 1000); // Convert to milliseconds
+
+            // After MySQL starts, add extra wait time for database initialization
+            if (freshNF.type === 'MySQL') {
+                this.addTerminalLine(output, '', 'blank');
+                this.addTerminalLine(output, ' ⏳ Initializing database...', 'info');
+                this.addTerminalLine(output, ' ⏳ Setting up tables and schemas...', 'info');
+                await this.delay(8000); // 8 second wait for MySQL to finish initialization
+                this.addTerminalLine(output, ' ✔ Database ready and accepting connections', 'success');
+                this.addTerminalLine(output, '', 'blank');
+            }
 
             // Set status to starting (preserve createdAt)
             freshNF.status = 'starting';
@@ -733,7 +1074,21 @@ class DockerTerminal {
                 });
             }
 
-            // After 5 seconds, set to stable
+            // Set startup delay based on NF type
+            let stableDelay = 5000; // Default 5 seconds
+            if (freshNF.type === 'MySQL') {
+                stableDelay = 25000; // MySQL takes 25 seconds total (already waited 8 seconds above)
+            } else if (freshNF.type === 'UPF') {
+                stableDelay = 10000; // UPF takes 10 seconds to fully initialize
+            } else if (freshNF.type === 'ext-dn') {
+                stableDelay = 15000; // ext-dn takes 15 seconds (waits for UPF health check)
+            } else if (freshNF.type === 'UDR' || freshNF.type === 'UDM') {
+                stableDelay = 8000; // Database-dependent services take 8 seconds
+            } else if (freshNF.type === 'AMF') {
+                stableDelay = 12000; // AMF takes 12 seconds (depends on multiple services)
+            }
+
+            // After delay, set to stable
             setTimeout(() => {
                 const updatedNF = window.dataStore?.getNFById(freshNF.id);
                 if (updatedNF) {
@@ -752,7 +1107,7 @@ class DockerTerminal {
                         window.logEngine.addLog(updatedNF.id, 'SUCCESS', `${updatedNF.name} is now STABLE and ready for connections`, {
                             previousStatus: 'starting',
                             newStatus: 'stable',
-                            uptime: '5 seconds',
+                            uptime: `${stableDelay / 1000} seconds`,
                             readyForConnections: true
                         });
                     }
@@ -761,7 +1116,7 @@ class DockerTerminal {
                         window.canvasRenderer.render();
                     }
                 }
-            }, 5000);
+            }, stableDelay);
         }
 
         this.addTerminalLine(output, '', 'blank');
@@ -1158,6 +1513,10 @@ class DockerTerminal {
         this.addTerminalLine(output, 'Press Ctrl+C to stop watching', 'info');
         this.addTerminalLine(output, '', 'blank');
 
+        // Hide the prompt while watch is running
+        const inputLine = output.querySelector('.docker-terminal-input-line');
+        if (inputLine) inputLine.style.display = 'none';
+
         // Store initial content length to know where to clear from
         const initialLength = output.querySelectorAll('.docker-terminal-line').length;
 
@@ -1309,22 +1668,18 @@ class DockerTerminal {
             }
         }
 
-        // Also clear buses and bus connections
+        // Clear bus connections but keep the buses themselves
         if (window.dataStore) {
-            const allBuses = window.dataStore.getAllBuses() || [];
             const allBusConnections = window.dataStore.getAllBusConnections() || [];
 
-            if (allBuses.length > 0 || allBusConnections.length > 0) {
+            if (allBusConnections.length > 0) {
                 const busConnectionIds = allBusConnections.map(bc => bc.id);
-                const busIds = allBuses.map(bus => bus.id);
 
                 busConnectionIds.forEach(busConnId => {
                     window.dataStore.removeBusConnection(busConnId);
                 });
-
-                busIds.forEach(busId => {
-                    window.dataStore.removeBus(busId);
-                });
+                
+                console.log('✅ Bus connections cleared, but service buses preserved');
             }
         }
 
@@ -1535,23 +1890,39 @@ class DockerTerminal {
         nf.statusTimestamp = Date.now();
         window.dataStore.updateNF(nf.id, nf);
 
+        // Log the starting event
+        if (window.logEngine) {
+            window.logEngine.addLog(nf.id, 'WARNING',
+                `${nf.name} container starting...`, {
+                status: 'starting',
+                startedAt: new Date().toISOString(),
+                action: 'docker start ' + serviceName
+            });
+        }
+
+        if (window.canvasRenderer) window.canvasRenderer.render();
+
         setTimeout(() => {
             if (window.dataStore?.getNFById(nf.id)) {
                 nf.status = 'stable';
                 nf.statusTimestamp = Date.now();
                 window.dataStore.updateNF(nf.id, nf);
-                if (window.canvasRenderer) {
-                    window.canvasRenderer.render();
+
+                // Log the stable event
+                if (window.logEngine) {
+                    window.logEngine.addLog(nf.id, 'SUCCESS',
+                        `${nf.name} is now STABLE and ready for connections`, {
+                        status: 'stable',
+                        stableAt: new Date().toISOString()
+                    });
                 }
+
+                if (window.canvasRenderer) window.canvasRenderer.render();
             }
         }, 5000);
 
         this.addTerminalLine(output, `✅ ${nf.name} started (status: starting)`, 'success');
         this.addTerminalLine(output, 'Service will be stable in ~5 seconds', 'info');
-
-        if (window.canvasRenderer) {
-            window.canvasRenderer.render();
-        }
     }
 
     /**
@@ -1586,6 +1957,16 @@ class DockerTerminal {
         window.dataStore.updateNF(nf.id, nf);
 
         this.addTerminalLine(output, `✅ ${nf.name} stopped`, 'success');
+
+        // Log the stop event
+        if (window.logEngine) {
+            window.logEngine.addLog(nf.id, 'ERROR',
+                `${nf.name} container stopped`, {
+                status: 'stopped',
+                stoppedAt: new Date().toISOString(),
+                action: 'docker stop ' + serviceName
+            });
+        }
 
         if (window.canvasRenderer) {
             window.canvasRenderer.render();
@@ -1862,63 +2243,9 @@ class DockerTerminal {
      */
     setupWindowControls(terminalModal) {
         const terminalWindow = document.getElementById('docker-terminal-window');
-        const titlebar = document.getElementById('docker-terminal-titlebar');
-        const minimizeBtn = document.getElementById('docker-terminal-minimize');
-        const maximizeBtn = document.getElementById('docker-terminal-maximize');
         const resizeHandle = document.getElementById('docker-terminal-resize-handle');
 
-        if (!terminalWindow || !titlebar) return;
-
-        // Dragging functionality
-        let isDragging = false;
-        let dragStartX = 0;
-        let dragStartY = 0;
-        let windowStartX = 0;
-        let windowStartY = 0;
-
-        titlebar.addEventListener('mousedown', (e) => {
-            if (e.target.closest('.docker-terminal-btn')) return;
-            if (this.terminalState.isMaximized) return;
-
-            isDragging = true;
-            dragStartX = e.clientX;
-            dragStartY = e.clientY;
-
-            const rect = terminalWindow.getBoundingClientRect();
-            windowStartX = rect.left;
-            windowStartY = rect.top;
-
-            titlebar.style.cursor = 'grabbing';
-            e.preventDefault();
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-
-            const deltaX = e.clientX - dragStartX;
-            const deltaY = e.clientY - dragStartY;
-
-            const newX = windowStartX + deltaX;
-            const newY = windowStartY + deltaY;
-
-            const maxX = window.innerWidth - terminalWindow.offsetWidth;
-            const maxY = window.innerHeight - terminalWindow.offsetHeight;
-
-            this.terminalState.x = Math.max(0, Math.min(newX, maxX));
-            this.terminalState.y = Math.max(0, Math.min(newY, maxY));
-
-            terminalWindow.style.left = this.terminalState.x + 'px';
-            terminalWindow.style.top = this.terminalState.y + 'px';
-            terminalWindow.style.transform = 'none';
-        });
-
-        document.addEventListener('mouseup', () => {
-            if (isDragging) {
-                isDragging = false;
-                titlebar.style.cursor = 'grab';
-                this.saveTerminalState();
-            }
-        });
+        if (!terminalWindow) return;
 
         // Resizing functionality
         let isResizing = false;
@@ -1929,7 +2256,6 @@ class DockerTerminal {
 
         if (resizeHandle) {
             resizeHandle.addEventListener('mousedown', (e) => {
-                if (this.terminalState.isMaximized) return;
                 isResizing = true;
                 resizeStartX = e.clientX;
                 resizeStartY = e.clientY;
@@ -1942,16 +2268,10 @@ class DockerTerminal {
 
         document.addEventListener('mousemove', (e) => {
             if (!isResizing) return;
-
-            const deltaX = e.clientX - resizeStartX;
-            const deltaY = e.clientY - resizeStartY;
-
-            const newWidth = Math.max(400, Math.min(startWidth + deltaX, window.innerWidth - 100));
-            const newHeight = Math.max(300, Math.min(startHeight + deltaY, window.innerHeight - 100));
-
+            const newWidth = Math.max(400, Math.min(startWidth + (e.clientX - resizeStartX), window.innerWidth - 100));
+            const newHeight = Math.max(300, Math.min(startHeight + (e.clientY - resizeStartY), window.innerHeight - 100));
             this.terminalState.width = newWidth;
             this.terminalState.height = newHeight;
-
             terminalWindow.style.width = newWidth + 'px';
             terminalWindow.style.height = newHeight + 'px';
         });
@@ -1962,28 +2282,6 @@ class DockerTerminal {
                 this.saveTerminalState();
             }
         });
-
-        // Minimize button
-        if (minimizeBtn) {
-            minimizeBtn.addEventListener('click', () => {
-                this.minimizeTerminal(terminalWindow);
-            });
-        }
-
-        // Maximize button
-        if (maximizeBtn) {
-            maximizeBtn.addEventListener('click', () => {
-                this.toggleMaximize(terminalWindow);
-            });
-        }
-
-        // Double-click titlebar to maximize/restore
-        titlebar.addEventListener('dblclick', (e) => {
-            if (e.target.closest('.docker-terminal-btn')) return;
-            this.toggleMaximize(terminalWindow);
-        });
-
-        titlebar.style.cursor = 'grab';
     }
 
     /**

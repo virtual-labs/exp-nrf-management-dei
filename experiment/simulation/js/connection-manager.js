@@ -37,7 +37,7 @@ class ConnectionManager {
             'SMF': ['NRF', 'AMF', 'UPF', 'PCF', 'UDM', 'UDR'],
 
             // UPF connections
-            'UPF': ['NRF', 'SMF', 'gNB'],
+            'UPF': ['NRF', 'SMF', 'gNB', 'ext-dn'],
 
             // AUSF connections
             'AUSF': ['NRF', 'AMF', 'UDM'],
@@ -83,7 +83,7 @@ class ConnectionManager {
 
         // Prevent self-connection
         if (sourceId === targetId) {
-            alert('Cannot connect an NF to itself');
+            if (isManual) alert('Cannot connect an NF to itself');
             return null;
         }
 
@@ -94,11 +94,13 @@ class ConnectionManager {
         const targetNetwork = this.getNetworkFromIP(targetNF.config.ipAddress);
         
         if (sourceNetwork !== targetNetwork) {
-            alert(`❌ Subnet Restriction!\n\n` +
-                  `${sourceNF.name} (${sourceNF.config.ipAddress}) is in subnet ${sourceNetwork}.0/24\n` +
-                  `${targetNF.name} (${targetNF.config.ipAddress}) is in subnet ${targetNetwork}.0/24\n\n` +
-                  `Network Functions can only connect within the same subnet.\n\n` +
-                  `Please move one of the services to the same subnet to establish connection.`);
+            if (isManual) {
+                alert(`❌ Subnet Restriction!\n\n` +
+                      `${sourceNF.name} (${sourceNF.config.ipAddress}) is in subnet ${sourceNetwork}.0/24\n` +
+                      `${targetNF.name} (${targetNF.config.ipAddress}) is in subnet ${targetNetwork}.0/24\n\n` +
+                      `Network Functions can only connect within the same subnet.\n\n` +
+                      `Please move one of the services to the same subnet to establish connection.`);
+            }
             
             // Log the restriction
             if (window.logEngine) {
@@ -120,7 +122,11 @@ class ConnectionManager {
 
         // Validate connection is allowed (3GPP compliance)
         if (!this.isConnectionValid(sourceNF.type, targetNF.type)) {
-            alert(`Invalid connection: ${sourceNF.type} cannot connect to ${targetNF.type}\n\nPer 3GPP specifications, this connection is not allowed.`);
+            if (isManual) {
+                alert(`Invalid connection: ${sourceNF.type} cannot connect to ${targetNF.type}\n\nPer 3GPP specifications, this connection is not allowed.`);
+            } else {
+                console.warn(`❌ Auto-connection blocked: ${sourceNF.type} → ${targetNF.type} not valid per 3GPP`);
+            }
             return null;
         }
 
