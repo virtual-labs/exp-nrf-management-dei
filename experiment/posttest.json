@@ -1,8 +1,11 @@
 {
   "version": 2.0,
+   "filters": {
+    "difficulty": ["beginner", "intermediate"]
+  },
   "questions": [
     {
-      "question": "When using the One-Click Deploy option, which component is deployed first by the system?",
+      "question": "Q1. When using the One-Click Deploy option, which component is deployed first by the system?",
       "answers": {
         "a": "NRF",
         "b": "AMF",
@@ -19,7 +22,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What happens to the existing topology when One-Click Deploy is initiated?",
+      "question": "Q2. What happens to the existing topology when One-Click Deploy is initiated?",
       "answers": {
         "a": "It is merged with the new topology",
         "b": "It is backed up automatically",
@@ -36,7 +39,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which action allows you to view the registration request sent by an AMF to the NRF?",
+      "question": "Q3. Which action allows you to view the registration request sent by an AMF to the NRF?",
       "answers": {
         "a": "Click 'Show Deregistration Message'",
         "b": "Restart the AMF",
@@ -50,10 +53,10 @@
         "d": "Incorrect. Service Bus logs are unrelated."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "In what format are the registration and deregistration messages displayed?",
+      "question": "Q4. In what format are the registration and deregistration messages displayed?",
       "answers": {
         "a": "XML",
         "b": "YAML",
@@ -70,7 +73,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which Network Function is responsible for maintaining registration information of all NFs?",
+      "question": "Q5. Which Network Function is responsible for maintaining registration information of all NFs?",
       "answers": {
         "a": "AMF",
         "b": "NRF",
@@ -87,7 +90,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "How can registration details from all Network Functions be viewed collectively?",
+      "question": "Q6. How can registration details from all Network Functions be viewed collectively?",
       "answers": {
         "a": "From each NF individually",
         "b": "From the Service Bus panel",
@@ -101,10 +104,10 @@
         "d": "Incorrect. UE does not manage registrations."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "What is the correct procedure to deregister an SMF from the NRF?",
+      "question": "Q7. What is the correct procedure to deregister an SMF from the NRF?",
       "answers": {
         "a": "Stop the NRF service",
         "b": "Delete the SMF node",
@@ -121,7 +124,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "After deregistration, where can the deregistration request be viewed from the NF side?",
+      "question": "Q8. After deregistration, where can the deregistration request be viewed from the NF side?",
       "answers": {
         "a": "NRF topology only",
         "b": "NF Configuration Panel using 'Show Deregistration Message'",
@@ -135,10 +138,10 @@
         "d": "Incorrect. UE terminal is unrelated."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "What information does the NRF display when an NF deregisters?",
+      "question": "Q9. What information does the NRF display when an NF deregisters?",
       "answers": {
         "a": "Only the deregistration time",
         "b": "Only the NF name",
@@ -155,7 +158,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What is the impact of NF deregistration on discovery results?",
+      "question": "Q10. What is the impact of NF deregistration on discovery results?",
       "answers": {
         "a": "The NF is still discoverable",
         "b": "Discovery fails completely",
@@ -169,10 +172,10 @@
         "d": "Incorrect. Only the deregistered NF is affected."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Which visual behavior confirms automatic deployment is in progress?",
+      "question": "Q11. Which visual behavior confirms automatic deployment is in progress?",
       "answers": {
         "a": "All NFs appear at once",
         "b": "Topology remains static",
@@ -189,7 +192,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which button is used to confirm viewing of registration messages?",
+      "question": "Q12. Which button is used to confirm viewing of registration messages?",
       "answers": {
         "a": "Deploy",
         "b": "Start NF",
@@ -206,7 +209,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which of the following Network Functions is included in the automatic deployment list?",
+      "question": "Q13. Which of the following Network Functions is included in the automatic deployment list?",
       "answers": {
         "a": "DNS Server",
         "b": "Firewall",
@@ -223,7 +226,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What confirms that an NF is successfully registered with the NRF?",
+      "question": "Q14. What confirms that an NF is successfully registered with the NRF?",
       "answers": {
         "a": "NF appears in discovery results",
         "b": "NF restarts automatically",
@@ -240,7 +243,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Why is NRF verification important during discovery after deregistration?",
+      "question": "Q15. Why is NRF verification important during discovery after deregistration?",
       "answers": {
         "a": "To restart deregistered NFs",
         "b": "To ensure only active NFs are returned",
@@ -254,7 +257,7 @@
         "d": "Incorrect. Service Bus configuration is unchanged."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     }
   ]
 }

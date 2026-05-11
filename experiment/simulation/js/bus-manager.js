@@ -96,6 +96,12 @@ class BusManager {
             return null;
         }
 
+        // UPF and ext-dn should never connect to the service bus
+        if (nf.type === 'UPF' || nf.type === 'ext-dn') {
+            console.log(`🚫 Blocked bus connection for ${nf.type} (${nf.name}) - UPF and ext-dn do not connect to the service bus`);
+            return null;
+        }
+
         if (bus.connections.includes(nfId)) {
             alert(`${nf.name} is already connected to ${bus.name}`);
             return null;

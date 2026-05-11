@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>5G SBA Network Dashboard</title>
+    <title>5G SBA Network</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 
@@ -15,15 +15,16 @@
         <!-- Top Toolbar -->
         <div class="toolbar">
             <div class="toolbar-left">
-                <h1>🌐 NRF Management Dashboard</h1>
+                <h1>🌐 NRF Management</h1>
             </div>
             <div class="toolbar-right">
                 <!-- Main action buttons -->
-                <button id="btn-terminal" class="btn btn-terminal">💻 Terminal</button>
                 <button id="btn-one-click-deploy" class="btn btn-success">🚀 One-Click Deploy</button>
+                <button id="btn-terminal" class="btn btn-terminal">💻 Terminal</button>
                 <button id="btn-add-nf" class="btn btn-primary">➕ Add NF</button>
                 <button id="btn-clear" class="btn btn-danger">🗑️ Clears</button>
                 <button id="btn-validate" class="btn btn-info">✓ Validate</button>
+                <button id="btn-help" class="btn">❓ Help</button>
             </div>
         </div>
 
@@ -131,39 +132,25 @@
     <!-- Help Modal -->
     <div id="help-modal" class="modal" style="display:none;">
         <div class="modal-content help-modal-content">
-            <h2>📚 5G Service-Based Architecture Guide</h2>
+            <h2>� Simulation Steps</h2>
             <div class="help-content">
                 <div class="help-section">
-                    <h3>🏗️ Reference Architecture</h3>
-                    <div class="architecture-diagram">
-                        <img id="sba-diagram" src="images/sba/sba.jpg" alt="5G Service-Based Architecture"
-                            style="width: 100%; max-width: 800px; height: auto; background: #1a252f; border-radius: 8px;">
-                    </div>
-                </div>
-
-                <div class="help-section">
-                    <h3>🚀 Quick Start Guide</h3>
                     <ol class="help-steps">
-                        <li><strong>Create Service Buses:</strong> Click "📊 Add Bus Line" to create Control Plane and
-                            User Plane buses</li>
-                        <li><strong>Add Network Functions:</strong> Click "➕ Add NF" to add AMF, SMF, UPF, etc.</li>
-                        <li><strong>Connect Components:</strong> Use "Select Source" → "Select Destination" to connect
-                            NFs to buses</li>
-                        <li><strong>Validate Topology:</strong> Click "✓ Validate" to check your 5G network design</li>
+                        <li>Click the <strong>Terminal</strong> button and run <code>docker compose -f docker-compose.yml up -d</code> to deploy core network components.</li>
+                        <li>Run <code>docker compose -f docker-compose-gnb.yml up -d</code> to bring the gNB (Base Station) online.</li>
+                        <li>Run <code>docker compose -f docker-compose-ue.yml up -d</code> to deploy UE (User Equipment) devices.</li>
+                        <li>Run <code>docker ps</code> to verify all containers are running.</li>
+                        <li>Alternatively, click <strong>One-Click Deploy</strong> to automatically deploy the entire 5G network topology.</li>
+                        <li>Select any Network Function on the canvas and click <strong>Show Registration Message</strong> to observe its NRF registration.</li>
+                        <li>Click on the <strong>NRF</strong> node and open <strong>Show Registration Message</strong> to view all registered functions.</li>
+                        <li>Select a Network Function and click <strong>Deregister from NRF</strong> to perform a graceful shutdown.</li>
+                        <li>Click <strong>Show Deregistration Message</strong> on the deregistered NF to observe the farewell exchange.</li>
+                        <li>Click <strong>Show Deregistration Message</strong> on the NRF to confirm the function has been removed from the registry.</li>
+                        <li>Attempt discovery of the deregistered function — the NRF will return an empty response, confirming full removal.</li>
                     </ol>
                 </div>
-
-                <div class="help-section">
-                    <h3>🔗 Connection Types</h3>
-                    <ul class="help-list">
-                        <li><span class="connection-type nf-bus">NF → Bus:</span> Connect Network Functions to Service
-                            Buses</li>
-                        <li><span class="connection-type bus-nf">Bus → NF:</span> Connect Service Buses to Network
-                            Functions</li>
-                        <li><span class="connection-type bus-bus">Bus → Bus:</span> Create bridges between different
-                            service buses</li>
-                        <li><span class="connection-type nf-nf">NF → NF:</span> Direct point-to-point connections</li>
-                    </ul>
+                <div class="help-section" style="text-align:center; padding: 12px;">
+                    <a href="../procedure.html" target="_blank" class="btn-view-procedures">For More Detailes... 📄 View Full Procedures</a>
                 </div>
             </div>
             <button id="help-close" class="btn btn-primary btn-block">Close</button>
@@ -179,6 +166,7 @@
     <script src="js/ping-manager.js"></script>
     <script src="js/log-engine.js"></script>
     <script src="js/deployment-manager.js"></script>
+    <script src="js/docker-compose-content.js"></script>
     <script src="js/docker.js"></script>
     <script src="js/canvas-renderer.js"></script>
     <script src="js/ui-controller.js"></script>

@@ -951,8 +951,9 @@ class NFManager {
                     }
                 }
 
-                // AUTO-CONNECTIONS: Enabled for MySQL, gNB, UE, UPF, ext-dn, and UDM
-                if (nf.type === 'MySQL' || nf.type === 'gNB' || nf.type === 'UE' || nf.type === 'UPF' || nf.type === 'ext-dn' || nf.type === 'UDM') {
+                // AUTO-CONNECTIONS: Enabled for MySQL, gNB, UE, UDM, UPF, and ext-dn
+                // NOTE: UPF and ext-dn intentionally excluded from bus connections only
+                if (nf.type === 'MySQL' || nf.type === 'gNB' || nf.type === 'UE' || nf.type === 'UDM' || nf.type === 'ext-dn' || nf.type === 'UPF') {
                     // Schedule auto-connections after 8-10 seconds total
                     const autoConnectDelay = 3000 + Math.random() * 2000; // 3-5 more seconds
                     setTimeout(() => {
@@ -967,10 +968,6 @@ class NFManager {
                         console.log(`🔗 Auto-connections enabled for ${nf.name} - will connect to gNB and AMF automatically (no direct UPF connection)`);
                     } else if (nf.type === 'UPF') {
                         console.log(`🔗 Auto-connections enabled for ${nf.name} - will connect to SMF automatically (gNB and ext-dn will connect to UPF)`);
-                        // Auto-start ext-dn when UPF is stable
-                        setTimeout(() => {
-                            this.autoStartExtDNForUPF(nf);
-                        }, 3000); // Wait 3 seconds before creating ext-dn
                     } else if (nf.type === 'ext-dn') {
                         console.log(`🔗 Auto-connections enabled for ${nf.name} - will connect to UPF automatically`);
                     } else if (nf.type === 'UDM') {
@@ -1057,6 +1054,61 @@ class NFManager {
                 }
             }
             return; // MySQL only connects to UDR, exit here
+        }
+
+        // SPECIAL CASE: UPF connects to SMF (N4 interface)
+        if (nf.type === 'UPF') {
+            console.log(`🔗 UPF auto-connection: Looking for SMF in same subnet`);
+
+            const allNFs = window.dataStore.getAllNFs();
+            const sourceNetwork = this.getNetworkFromIP(nf.config.ipAddress);
+
+            const smfInSameSubnet = allNFs.find(otherNf =>
+                otherNf.id !== nf.id &&
+                otherNf.status === 'stable' &&
+                otherNf.type === 'SMF' &&
+                this.getNetworkFromIP(otherNf.config.ipAddress) === sourceNetwork
+            );
+
+            if (smfInSameSubnet) {
+                const existingConnections = window.dataStore.getConnectionsForNF(nf.id);
+                const alreadyConnected = existingConnections.some(conn =>
+                    conn.sourceId === smfInSameSubnet.id || conn.targetId === smfInSameSubnet.id
+                );
+
+                if (!alreadyConnected && window.connectionManager) {
+                    const connection = window.connectionManager.createManualConnection(nf.id, smfInSameSubnet.id);
+                    if (connection) {
+                        console.log(`✅ UPF connected to SMF: ${nf.name} → ${smfInSameSubnet.name}`);
+                        if (window.logEngine) {
+                            window.logEngine.addLog(nf.id, 'SUCCESS',
+                                `UPF connected to ${smfInSameSubnet.name} via ${connection.interfaceName}`, {
+                                targetIP: smfInSameSubnet.config.ipAddress,
+                                interface: connection.interfaceName
+                            });
+                        }
+                        if (window.canvasRenderer) window.canvasRenderer.render();
+                    }
+                } else {
+                    console.log(`ℹ️ UPF already connected to SMF`);
+                }
+            } else {
+                console.log(`⚠️ No SMF found in same subnet (${sourceNetwork}.0/24) for UPF ${nf.name}`);
+                if (window.logEngine) {
+                    window.logEngine.addLog(nf.id, 'WARNING',
+                        `No SMF available in same subnet for UPF session management`, {
+                        sourceSubnet: sourceNetwork + '.0/24',
+                        suggestion: 'Deploy SMF in the same subnet range'
+                    });
+                }
+            }
+
+            // Also trigger ext-dn auto-start
+            setTimeout(() => {
+                this.autoStartExtDNForUPF(nf);
+            }, 3000);
+
+            return; // UPF only auto-connects to SMF, exit here
         }
 
         // SPECIAL CASE: ext-dn only connects to UPF
@@ -1344,12 +1396,12 @@ class NFManager {
      */
     getStatusColor(status) {
         switch (status) {
-            case 'starting': return '#e74c3c'; // Red
-            case 'stable': return '#2ecc71';   // Green
-            case 'unstable': return '#e74c3c'; // Red
-            case 'error': return '#e67e22';    // Orange
-            case 'stopped': return '#95a5a6';  // Gray
-            default: return '#3498db';         // Blue
+            case 'starting':  return '#e74c3c'; // Red
+            case 'stable':    return '#2ecc71'; // Green
+            case 'unstable':  return '#e74c3c'; // Red
+            case 'error':     return '#e67e22'; // Orange
+            case 'stopped':   return '#e74c3c'; // Red
+            default:          return '#3498db'; // Blue
         }
     }
 

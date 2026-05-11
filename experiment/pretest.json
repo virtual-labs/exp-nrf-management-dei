@@ -1,8 +1,11 @@
 {
   "version": 2.0,
+   "filters": {
+    "difficulty": ["beginner", "intermediate"]
+  },
   "questions": [
     {
-      "question": "The 5G Core Network is based on which type of architecture?",
+      "question": "Q1. The 5G Core Network is based on which type of architecture?",
       "answers": {
         "a": "Circuit-switched architecture",
         "b": "Service-Based Architecture",
@@ -19,7 +22,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What does NRF stand for in the 5G Core Network?",
+      "question": "Q2. What does NRF stand for in the 5G Core Network?",
       "answers": {
         "a": "Network Routing Function",
         "b": "Network Repository Function",
@@ -33,10 +36,10 @@
         "d": "Incorrect. NRF is not a relay feature."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Which protocol is used for Service-Based Interface (SBI) communication in the 5G Core?",
+      "question": "Q3. Which protocol is used for Service-Based Interface (SBI) communication in the 5G Core?",
       "answers": {
         "a": "HTTP/1.1",
         "b": "HTTP/2",
@@ -53,7 +56,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What is the primary purpose of the NRF?",
+      "question": "Q4. What is the primary purpose of the NRF?",
       "answers": {
         "a": "Managing user data",
         "b": "Acting as a service registry for Network Functions",
@@ -67,10 +70,10 @@
         "d": "Incorrect. User packet forwarding is handled by UPF."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "When a Network Function registers with the NRF, which HTTP method is used?",
+      "question": "Q5. When a Network Function registers with the NRF, which HTTP method is used?",
       "answers": {
         "a": "GET",
         "b": "POST",
@@ -87,7 +90,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which network function typically handles authentication in the 5G Core?",
+      "question": "Q6. Which network function typically handles authentication in the 5G Core?",
       "answers": {
         "a": "AMF",
         "b": "SMF",
@@ -104,7 +107,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What kind of response indicates successful registration of a Network Function?",
+      "question": "Q7. What kind of response indicates successful registration of a Network Function?",
       "answers": {
         "a": "200 OK",
         "b": "201 Created",
@@ -118,10 +121,10 @@
         "d": "Incorrect. 404 indicates a missing resource."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "What is the purpose of Network Function Discovery?",
+      "question": "Q8. What is the purpose of Network Function Discovery?",
       "answers": {
         "a": "To allocate IP addresses",
         "b": "To find available Network Functions offering required services",
@@ -138,7 +141,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "Which HTTP method is used for Network Function deregistration?",
+      "question": "Q9. Which HTTP method is used for Network Function deregistration?",
       "answers": {
         "a": "GET",
         "b": "PUT",
@@ -155,7 +158,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What information does a Network Function provide during registration?",
+      "question": "Q10. What information does a Network Function provide during registration?",
       "answers": {
         "a": "Only its IP address",
         "b": "NF type, ID, address, and services provided",
@@ -172,7 +175,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What does the heartbeat timer represent in NRF management?",
+      "question": "Q11. What does the heartbeat timer represent in NRF management?",
       "answers": {
         "a": "The speed of the network",
         "b": "The time interval to confirm the NF is alive",
@@ -186,10 +189,10 @@
         "d": "Incorrect. Signal strength is a RAN concept."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "What tool is commonly used to capture and analyze SBI messages?",
+      "question": "Q12. What tool is commonly used to capture and analyze SBI messages?",
       "answers": {
         "a": "Android Studio",
         "b": "Wireshark",
@@ -206,7 +209,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "The Network Repository Function stores details about:",
+      "question": "Q13. The Network Repository Function stores details about:",
       "answers": {
         "a": "Subscriber profiles",
         "b": "Network Function instances",
@@ -223,7 +226,7 @@
       "difficulty": "beginner"
     },
     {
-      "question": "What is the transport protocol used by HTTP/2 in the 5G Core?",
+      "question": "Q14. What is the transport protocol used by HTTP/2 in the 5G Core?",
       "answers": {
         "a": "UDP",
         "b": "TCP",
@@ -237,10 +240,10 @@
         "d": "Incorrect. RTP is for media streaming."
       },
       "correctAnswer": "b",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
     },
     {
-      "question": "Which open-source platform provides an NRF implementation for experimentation?",
+      "question": "Q15. Which open-source platform provides an NRF implementation for experimentation?",
       "answers": {
         "a": "Wireshark",
         "b": "OpenAirInterface (OAI)",
