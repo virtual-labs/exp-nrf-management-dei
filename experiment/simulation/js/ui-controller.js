@@ -2775,8 +2775,7 @@ class UIController {
             'Available commands:',
             '',
             'HELP        - Display this help message',
-            'ifconfig    - Display network configuration (Windows style)',
-            'IFCONFIG    - Display network interfaces (Linux style)',
+            'ifconfig    - Display network configuration',
             'PING        - Test network connectivity',
             '  Format:   ping -I <interface> <target> [-c<count>]',
             '  Examples: ping -I oaitun_ue1 8.8.8.8 -c4',
@@ -2805,17 +2804,16 @@ class UIController {
      * @param {HTMLElement} output - Output element
      */
     showifconfig(nf, output) {
+        // Linux-style ifconfig output for eth0
         const lines = [
-            'Windows IP Configuration',
-            '',
-            'Ethernet adapter Local Area Connection:',
-            '',
-            `   Connection-specific DNS Suffix  . : 5g.local`,
-            `   IPv4 Address. . . . . . . . . . . : ${nf.config.ipAddress}`,
-            `   Subnet Mask . . . . . . . . . . . : 255.255.255.0`,
-            `   Default Gateway . . . . . . . . . : 192.168.1.1`,
-            `   DNS Servers . . . . . . . . . . . : 8.8.8.8`,
-            `                                       8.8.4.4`,
+            `eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500`,
+            `        inet ${nf.config.ipAddress}  netmask 255.255.255.0  broadcast 192.168.1.255`,
+            `        inet6 fe80::1  prefixlen 64  scopeid 0x20<link>`,
+            `        ether 02:42:c0:a8:01:0a  txqueuelen 0  (Ethernet)`,
+            `        RX packets 0  bytes 0 (0.0 B)`,
+            `        RX errors 0  dropped 0  overruns 0  frame 0`,
+            `        TX packets 0  bytes 0 (0.0 B)`,
+            `        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0`,
             ''
         ];
 
@@ -2827,15 +2825,14 @@ class UIController {
         if (nf.type === 'UPF' && nf.config.ogstunInterface) {
             const ogstun = nf.config.ogstunInterface;
             const tunLines = [
-                'Tunnel adapter ogstun (tun0):',
-                '',
-                `   Connection-specific DNS Suffix  . : `,
-                `   IPv4 Address. . . . . . . . . . . : ${ogstun.ipAddress}`,
-                `   Subnet Mask . . . . . . . . . . . : ${ogstun.netmask}`,
-                `   Default Gateway . . . . . . . . . : ${ogstun.gatewayIP}`,
-                `   MTU . . . . . . . . . . . . . . . : ${ogstun.mtu}`,
-                `   Flags . . . . . . . . . . . . . . : ${ogstun.flags}`,
-                `   IPv6 Address. . . . . . . . . . . : ${ogstun.ipv6}`,
+                `ogstun: flags=4305<UP,POINTOPOINT,RUNNING,NOARP,MULTICAST>  mtu ${ogstun.mtu}`,
+                `        inet ${ogstun.ipAddress}  netmask ${ogstun.netmask}  destination ${ogstun.gatewayIP}`,
+                `        inet6 ${ogstun.ipv6}  prefixlen 64  scopeid 0x0<global>`,
+                `        unspec 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  txqueuelen 500  (UNSPEC)`,
+                `        RX packets 0  bytes 0 (0.0 B)`,
+                `        RX errors 0  dropped 0  overruns 0  frame 0`,
+                `        TX packets 0  bytes 0 (0.0 B)`,
+                `        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0`,
                 ''
             ];
             tunLines.forEach(line => {
@@ -2847,16 +2844,14 @@ class UIController {
         if (nf.type === 'UE' && nf.config.tunInterface) {
             const tun = nf.config.tunInterface;
             const tunLines = [
-                `Tunnel adapter ${tun.name}:`,
-                '',
-                `   Connection-specific DNS Suffix  . : `,
-                `   IPv4 Address. . . . . . . . . . . : ${tun.ipAddress}`,
-                `   Subnet Mask . . . . . . . . . . . : ${tun.netmask}`,
-                `   Default Gateway . . . . . . . . . : ${tun.gateway}`,
-                `   MTU . . . . . . . . . . . . . . . : ${tun.mtu}`,
-                `   Flags . . . . . . . . . . . . . . : ${tun.flags}`,
-                `   IPv6 Address. . . . . . . . . . . : ${tun.ipv6}`,
-                `   Destination . . . . . . . . . . . : ${tun.destination}`,
+                `${tun.name}: flags=4305<UP,POINTOPOINT,RUNNING,NOARP,MULTICAST>  mtu ${tun.mtu}`,
+                `        inet ${tun.ipAddress}  netmask ${tun.netmask}  destination ${tun.destination}`,
+                `        inet6 ${tun.ipv6}  prefixlen 64  scopeid 0x0<global>`,
+                `        unspec 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00-00  txqueuelen 500  (UNSPEC)`,
+                `        RX packets 0  bytes 0 (0.0 B)`,
+                `        RX errors 0  dropped 0  overruns 0  frame 0`,
+                `        TX packets 0  bytes 0 (0.0 B)`,
+                `        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0`,
                 ''
             ];
             tunLines.forEach(line => {
