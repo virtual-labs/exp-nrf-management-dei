@@ -2592,7 +2592,6 @@ class UIController {
             'help',
             'ifconfig',
             'ping',
-            'ping subnet',
             'cls',
             'clear',
             'exit',
@@ -2722,11 +2721,12 @@ class UIController {
             this.showWindowsHelp(output);
         } else if (cmd === 'ifconfig') {
             this.showifconfig(nf, output);
+        } else if (cmd === 'ping subnet') {
+            this.addTerminalLine(output, `'ping subnet' is not recognized as an internal or external command,`, 'error');
+            this.addTerminalLine(output, `operable program or batch file.`, 'error');
         } else if (cmd.startsWith('ping ')) {
             // Parse ping command with -I and -c options
             await this.executeLinuxPing(nf, command, output);
-        } else if (cmd === 'ping subnet') {
-            await this.executeWindowsPingSubnet(nf, output);
         } else if (cmd === 'cls' || cmd === 'clear') {
             output.innerHTML = '';
         } else if (cmd === 'exit') {
