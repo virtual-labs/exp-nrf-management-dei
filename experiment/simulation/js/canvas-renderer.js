@@ -48,6 +48,12 @@ class CanvasRenderer {
         this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
         this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
         this.canvas.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+        this.canvas.addEventListener('mouseleave', () => {
+            const tooltip = document.getElementById('nf-tooltip');
+            tooltip.style.display = 'none';
+            this.hoveredNF = null;
+            this.render();
+        });
 
         // Add ResizeObserver to handle container size changes
         if (window.ResizeObserver) {
@@ -543,9 +549,28 @@ class CanvasRenderer {
         if (hoveredNF) {
             this.hoveredNF = hoveredNF.id;
             this.canvas.style.cursor = 'pointer';
+
+            // Show tooltip if NF is deregistered
+            if (hoveredNF.status === 'deregistered') {
+                const tooltip = document.getElementById('nf-tooltip');
+                tooltip.textContent = `${hoveredNF.name} is deregistered from NRF`;
+                tooltip.style.display = 'block';
+                
+                // Position tooltip
+                const containerRect = this.canvas.parentElement.getBoundingClientRect();
+                tooltip.style.left = `${e.clientX - containerRect.left + 15}px`;
+                tooltip.style.top = `${e.clientY - containerRect.top + 15}px`;
+            } else {
+                // Hide tooltip if not deregistered
+                const tooltip = document.getElementById('nf-tooltip');
+                tooltip.style.display = 'none';
+            }
         } else {
             this.hoveredNF = null;
             this.canvas.style.cursor = 'default';
+            // Hide tooltip when not hovering over any NF
+            const tooltip = document.getElementById('nf-tooltip');
+            tooltip.style.display = 'none';
         }
 
         this.render();

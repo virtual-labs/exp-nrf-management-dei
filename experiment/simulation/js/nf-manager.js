@@ -1396,12 +1396,13 @@ class NFManager {
      */
     getStatusColor(status) {
         switch (status) {
-            case 'starting':  return '#e74c3c'; // Red
-            case 'stable':    return '#2ecc71'; // Green
-            case 'unstable':  return '#e74c3c'; // Red
-            case 'error':     return '#e67e22'; // Orange
-            case 'stopped':   return '#e74c3c'; // Red
-            default:          return '#3498db'; // Blue
+            case 'starting':      return '#e74c3c'; // Red
+            case 'stable':        return '#2ecc71'; // Green
+            case 'unstable':      return '#e74c3c'; // Red (kept for backward compatibility)
+            case 'deregistered':  return '#ff9800'; // Orange
+            case 'error':         return '#e67e22'; // Orange
+            case 'stopped':       return '#ff9800'; // Orange
+            default:              return '#3498db'; // Blue
         }
     }
 

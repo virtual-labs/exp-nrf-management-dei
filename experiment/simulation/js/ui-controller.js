@@ -845,7 +845,7 @@ class UIController {
                 
                 <div class="form-group">
                     <label>Port *</label>
-                    <input type="number" id="config-port" value="${defaultPort}" required>
+                    <input type="text" id="config-port" value="${defaultPort}" required>
                 </div>
                 
                 <div class="form-group">
@@ -889,6 +889,22 @@ class UIController {
                         protocolSelect.value = currentProtocol;
                     }
                 }
+            });
+        }
+
+        // IP input restriction
+        const ipInput = document.getElementById('config-ip');
+        if (ipInput) {
+            ipInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+            });
+        }
+
+        // Port input restriction
+        const portInput = document.getElementById('config-port');
+        if (portInput) {
+            portInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
             });
         }
 
@@ -1006,7 +1022,7 @@ class UIController {
                 
                 <div class="form-group">
                     <label>Port</label>
-                    <input type="number" id="config-port" value="${nf.config.port}">
+                    <input type="text" id="config-port" value="${nf.config.port}">
                 </div>
                 
                 
@@ -1093,6 +1109,22 @@ class UIController {
                         protocolSelect.value = currentProtocol;
                     }
                 }
+            });
+        }
+
+        // IP input restriction
+        const ipInput = document.getElementById('config-ip');
+        if (ipInput) {
+            ipInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9.]/g, '');
+            });
+        }
+
+        // Port input restriction
+        const portInput = document.getElementById('config-port');
+        if (portInput) {
+            portInput.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
             });
         }
 
@@ -1378,7 +1410,7 @@ class UIController {
 
         // Standard NF configuration
         const ipAddress = document.getElementById('config-ip')?.value;
-        const port = parseInt(document.getElementById('config-port')?.value);
+        const port = document.getElementById('config-port')?.value;
         const httpProtocol = document.getElementById('config-http-protocol')?.value;
 
         if (!ipAddress || !port) {
@@ -1388,9 +1420,17 @@ class UIController {
 
         // Validate IP address format
         if (!this.isValidIP(ipAddress)) {
-            alert('❌ Invalid IP address format!\n\nPlease enter a valid IP address (e.g., 192.168.1.20)');
+            alert('❌ Invalid IP address!\n\n- Only digits and dots allowed\n- IP must be from 1.0.0.0 to 255.255.255.255\n- 0.0.0.0 is not allowed');
             return;
         }
+
+        // Validate port
+        if (!this.isValidPort(port)) {
+            alert('❌ Invalid port!\n\n- Port must be 4-6 digits only\n- Only numeric values allowed');
+            return;
+        }
+
+        const portNum = parseInt(port, 10);
 
         // Check for IP conflicts
         if (!window.nfManager?.isIPAddressAvailable(ipAddress)) {
@@ -1399,8 +1439,8 @@ class UIController {
         }
 
         // Check for port conflicts
-        if (!window.nfManager?.isPortAvailable(port)) {
-            alert(`❌ Port Conflict Detected!\n\nPort ${port} is already in use by another service.\n\nPlease choose a different port number.`);
+        if (!window.nfManager?.isPortAvailable(portNum)) {
+            alert(`❌ Port Conflict Detected!\n\nPort ${portNum} is already in use by another service.\n\nPlease choose a different port number.`);
             return;
         }
 
@@ -1416,7 +1456,7 @@ class UIController {
             if (nf) {
                 // Override with user-specified configuration
                 nf.config.ipAddress = ipAddress;
-                nf.config.port = port;
+                nf.config.port = portNum;
                 nf.config.httpProtocol = httpProtocol;
 
                 // Update in data store
@@ -1637,7 +1677,7 @@ class UIController {
 
         // Standard NF configuration
         const ipAddress = document.getElementById('config-ip')?.value;
-        const port = parseInt(document.getElementById('config-port')?.value);
+        const port = document.getElementById('config-port')?.value;
         const httpProtocol = document.getElementById('config-http-protocol')?.value;
 
         if (!ipAddress || !port) {
@@ -1647,9 +1687,17 @@ class UIController {
 
         // Validate IP address format
         if (!this.isValidIP(ipAddress)) {
-            alert('❌ Invalid IP address format!\n\nPlease enter a valid IP address (e.g., 192.168.1.20)');
+            alert('❌ Invalid IP address!\n\n- Only digits and dots allowed\n- IP must be from 1.0.0.0 to 255.255.255.255\n- 0.0.0.0 is not allowed');
             return;
         }
+
+        // Validate port
+        if (!this.isValidPort(port)) {
+            alert('❌ Invalid port!\n\n- Port must be 4-6 digits only\n- Only numeric values allowed');
+            return;
+        }
+
+        const portNum = parseInt(port, 10);
 
         // Check for IP conflicts (excluding current NF)
         if (nf.config.ipAddress !== ipAddress) {
@@ -1660,9 +1708,9 @@ class UIController {
         }
 
         // Check for port conflicts (excluding current NF)
-        if (nf.config.port !== port) {
-            if (!window.nfManager?.isPortAvailable(port)) {
-                alert(`❌ Port Conflict Detected!\n\nPort ${port} is already in use by another service.\n\nPlease choose a different port number.`);
+        if (nf.config.port !== portNum) {
+            if (!window.nfManager?.isPortAvailable(portNum)) {
+                alert(`❌ Port Conflict Detected!\n\nPort ${portNum} is already in use by another service.\n\nPlease choose a different port number.`);
                 return;
             }
         }
@@ -1672,7 +1720,7 @@ class UIController {
         const oldPort = nf.config.port;
 
         nf.config.ipAddress = ipAddress;
-        nf.config.port = port;
+        nf.config.port = portNum;
         nf.config.httpProtocol = httpProtocol;
 
         window.dataStore.updateNF(nfId, nf);
@@ -2592,7 +2640,6 @@ class UIController {
             'help',
             'ifconfig',
             'ping',
-            'ping subnet',
             'cls',
             'clear',
             'exit',
@@ -2722,11 +2769,12 @@ class UIController {
             this.showWindowsHelp(output);
         } else if (cmd === 'ifconfig') {
             this.showifconfig(nf, output);
+        } else if (cmd === 'ping subnet') {
+            this.addTerminalLine(output, `'ping subnet' is not recognized as an internal or external command,`, 'error');
+            this.addTerminalLine(output, `operable program or batch file.`, 'error');
         } else if (cmd.startsWith('ping ')) {
             // Parse ping command with -I and -c options
             await this.executeLinuxPing(nf, command, output);
-        } else if (cmd === 'ping subnet') {
-            await this.executeWindowsPingSubnet(nf, output);
         } else if (cmd === 'cls' || cmd === 'clear') {
             output.innerHTML = '';
         } else if (cmd === 'exit') {
@@ -3677,7 +3725,34 @@ class UIController {
      */
     isValidIP(ip) {
         const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
-        return ipRegex.test(ip);
+        if (!ipRegex.test(ip)) {
+            return false;
+        }
+        if (ip === '0.0.0.0') {
+            return false;
+        }
+        const octets = ip.split('.').map(Number);
+        if (octets[0] === 0) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Validate port number
+     * @param {number|string} port - Port number to validate
+     * @returns {boolean} True if valid port
+     */
+    isValidPort(port) {
+        const portStr = String(port);
+        if (!/^\d+$/.test(portStr)) {
+            return false;
+        }
+        const portNum = parseInt(portStr, 10);
+        if (portStr.length < 4 || portStr.length > 6) {
+            return false;
+        }
+        return true;
     }
 
     /**

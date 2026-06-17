@@ -201,7 +201,7 @@ Now let's see the same handshake but from the NRF's perspective. The NRF is like
 
 ## Step 4: Deregistration of a Network Function
 
-What happens when a network function needs to leave the network? Let's see the process of graceful shutdown — like saying goodbye before you leave the party.
+What happens when a network function Deregistered.
 
 <img src="images/prd11.png" width="90%">
 
@@ -210,7 +210,7 @@ What happens when a network function needs to leave the network? Let's see the p
 **Steps:**
 1. **Choose a Function to Remove** — Select a Network Function you want to deregister (try SMF for example).
 2. **Open Configuration** — Click on its Configuration Panel.
-3. **Say Goodbye** — Click the **Deregister from NRF** button to tell the registry that this function is shutting down.
+3. **Deregister** — Click the **Deregister from NRF** button to tell the registry that this function is shutting down.
 
 **What happens:**
 
@@ -228,22 +228,27 @@ What happens when a network function needs to leave the network? Let's see the p
 
 ## Step 5: Observe Deregistration Messages
 
+After the deregistration of the Network Function, an orange indicator appears to denote that the Network Function is no longer registered with the NRF.
+
+<img src="images/prd12.png" width="90%">
+
+
 ### From the Network Function Side
 
 Let's see exactly what the departing function said to the NRF when it left.
 
-<img src="images/prd12.png" width="90%">
+<img src="images/prd13.png" width="90%">
 
 *Fig: Deregistration - NF Side*
 
 **Steps:**
-1. **Select the Deregistered Function** — Click on the function that just deregistered.
-2. **Open Configuration** — Access its Configuration Panel.
-3. **See the Farewell** — Click **Show Deregistration Message** to see their goodbye conversation.
+1. Click on the function that just deregistered.
+2. Access its Configuration Panel.
+3. Click **Show Deregistration Message** to see their Deregistration conversation.
 
 **What you'll see:**
 
-**The Function's Farewell** — The message it sent to NRF saying "I'm shutting down, please remove me from the registry."
+**The Function's Deregistration** — The message it sent to NRF saying "I'm shutting down, please remove me from the registry."
 
 **The NRF's Acknowledgment** — The NRF's response: "Got it, you're removed. Goodbye!"
 
@@ -253,7 +258,7 @@ Let's see exactly what the departing function said to the NRF when it left.
 
 Now let's check the same event from the NRF's viewpoint — the administrative record of who checked out.
 
-<img src="images/prd13.png" width="90%">
+<img src="images/prd14.png" width="90%">
 
 *Fig: Deregistration - NRF Side*
 
@@ -280,7 +285,7 @@ Now let's check the same event from the NRF's viewpoint — the administrative r
 
 Final proof that deregistration worked! When other network functions try to find the deregistered function, they'll get an empty response. Let's verify this.
 
-<img src="images/prd14.png" width="90%">
+<img src="images/prd15.png" width="90%">
 
 *Fig: Network Function Discovery*
 

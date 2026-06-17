@@ -2407,6 +2407,14 @@ class DockerTerminal {
         this.addTerminalLine(output, '902c1fcc4369   host          host      local', 'info');
         this.addTerminalLine(output, '0c712814bbb0   none          null      local', 'info');
 
+        // Sync network existence with actual NF state
+        const coreNFsForLS = (window.dataStore?.getAllNFs() || []).filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
+        if (coreNFsForLS.length > 0) {
+            this.oaiWorkshopNetworkExists = true;
+            if (!this.oaiWorkshopCreatedTime) {
+                this.oaiWorkshopCreatedTime = coreNFsForLS[0].createdAt || Date.now();
+            }
+        }
         if (this.oaiWorkshopNetworkExists) {
             this.addTerminalLine(output, `${this.oaiWorkshopNetworkId}   oaiworkshop   bridge    local`, 'success');
         }
@@ -2425,6 +2433,14 @@ class DockerTerminal {
         } else if (networkName === 'none') {
             this.inspectNoneNetwork(output);
         } else if (networkName === 'oaiworkshop') {
+            // Sync network existence with actual NF state
+            const coreNFs = (window.dataStore?.getAllNFs() || []).filter(nf => nf.type !== 'gNB' && nf.type !== 'UE');
+            if (coreNFs.length > 0) {
+                this.oaiWorkshopNetworkExists = true;
+                if (!this.oaiWorkshopCreatedTime) {
+                    this.oaiWorkshopCreatedTime = coreNFs[0].createdAt || Date.now();
+                }
+            }
             if (this.oaiWorkshopNetworkExists) {
                 this.inspectOAIWorkshopNetwork(output);
             } else {

@@ -226,6 +226,11 @@ class NRFRegistry {
         };
 
         this.registrationMessages.set(nfInstanceId, registrationRecord);
+        // Remove any existing entry for this nfInstanceId before adding new one
+        const existingIndex = this.registrationHistory.findIndex(record => record.nfInstanceId === nfInstanceId);
+        if (existingIndex !== -1) {
+            this.registrationHistory.splice(existingIndex, 1);
+        }
         this.registrationHistory.push(registrationRecord);
 
         return {
@@ -356,22 +361,22 @@ class NRFRegistry {
         profile.deregisteredAt = Date.now();
         profile.deregistrationReason = reason;
 
-        // --- ADDED: Make NF unstable when deregistered ---
+        // --- ADDED: Make NF deregistered when deregistered from NRF ---
         const nf = window.dataStore?.getNFById(nfInstanceId);
         if (nf) {
             nf.nrfStatus = 'REMOVED';
-            nf.status = 'unstable'; // Change status to unstable
+            nf.status = 'deregistered'; // Change status to deregistered
             window.dataStore.updateNF(nfInstanceId, { 
                 nrfStatus: 'REMOVED',
-                status: 'unstable'
+                status: 'deregistered'
             });
             
-            // Re-render canvas to show red status
+            // Re-render canvas to show orange status
             if (window.canvasRenderer) {
                 window.canvasRenderer.render();
             }
             
-            console.log(`⚠️ ${nf.name} marked as UNSTABLE due to NRF deregistration`);
+            console.log(`⚠️ ${nf.name} marked as DEREGISTERED due to NRF deregistration`);
         }
 
         // Build deregistration request/response for UI display
@@ -401,6 +406,11 @@ class NRFRegistry {
         };
 
         this.deregistrationMessages.set(nfInstanceId, deregRecord);
+        // Remove any existing entry for this nfInstanceId before adding new one
+        const existingIndex = this.deregistrationHistory.findIndex(record => record.nfInstanceId === nfInstanceId);
+        if (existingIndex !== -1) {
+            this.deregistrationHistory.splice(existingIndex, 1);
+        }
         this.deregistrationHistory.push(deregRecord);
 
         // Log deregistration
