@@ -1,0 +1,670 @@
+<!DOCTYPE html><html lang="en"><head>
+      <!--Google Tag Manager-->
+      <script class="gtm">
+        var dataLayer = [{
+        'labName': 'Virtual Lab',
+        'discipline': 'Test',
+        'college': 'DLBG',
+        'phase': 'Testing',
+        'expName': 'DEMONSTRATE NRF MANAGEMENT PROCEDURES',
+        'expShortName': 'nrf-management'
+        }];
+    
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-5NMQ9NQ');
+      </script>
+      <!--End Google Tag Manager-->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    
+    	<meta name="experiment-short-name" content="nrf-management">
+    	<meta name="developer-institute" content="DLBG">
+    	<meta name="learning-unit" content="DEMONSTRATE NRF MANAGEMENT PROCEDURES">
+    	<meta name="task-name" content="Procedure">
+    
+    <!-- For iPhone -->
+    <meta name="msapplication-TileColor" content="#4076e0">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#4076e0">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#4076e0">
+    <title>Virtual Labs</title>
+    <link rel="shortcut icon" href="./assets/images/favicon.ico">
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/4.0.0/github-markdown.min.css" integrity="sha512-Oy18vBnbSJkXTndr2n6lDMO5NN31UljR8e/ICzVPrGpSud4Gkckb8yUpqhKuUNoE+o9gAb4O/rAxxw1ojyUVzg==" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&amp;family=Raleway&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./assets/css/github-markdown.min.css">
+    <link rel="stylesheet" href="./assets/css/vlabs-style.css">
+    <link rel="stylesheet" href="./assets/css/toast.css">
+    <link rel="stylesheet" href="./assets/katex_assets/katex.min.css">
+    
+    <script src="./assets/js/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.min.js" integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+      h1 {
+      font-size: 1.8rem;
+      }
+      h2 {
+      font-size: 1.4rem;
+      }
+      h3 {
+      font-size: 1.2rem;
+      }
+
+      h2, h3 {
+      font-weight: 800;
+      }
+    </style>
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"></head>
+  <body class="p-0 container-fluid vlabs-page d-flex flex-column justify-content-between">
+      <!--Google Tag Manager (noscript)-->
+      <noscript class="gtm">
+        <iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-5NMQ9NQ" style="display:none;visibility:hidden" width="0">
+        </iframe>
+      </noscript>
+      <!--End Google Tag Manager (noscript)-->
+  
+      <header class="vlabs-header sticky-top bg-white">
+        <nav class="p-0 navbar navbar-light d-flex align-items-stretch">
+          
+          <button class="navbar-toggler px-4" type="button" onclick="toggle()">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+      
+          <div class="d-flex justify-content-center">        
+            <a href="https://vlab.co.in" class="navbar-brand">
+              <img src="./assets/images/vlabs-color-small-moe.jpg" alt="vlabs logo" class="vlabs-logo">
+            </a>
+          </div>
+          
+          <div id="headerNavbar" class="d-none border-top flex-grow-1 d-lg-flex align-items-center justify-content-end">
+            <div class="svc-rating-display">
+                <rating-display spreadsheetid="1x12nhpp0QvnsA6x-O1sV4IA9SAbfVsq_wiexWkutOmU" sheetname="Experiment-Database" columnname="Experiment Short Name" columnvalue="nrf-management" imagesdirectory="/plugins/svc-rating/images/">
+                </rating-display>
+            </div>      <div class="svc-rating-submit">
+                <rating-submit title="Rate" this="" experiment="">
+                </rating-submit>
+            </div>      <bug-report id="bug-report" title="[BUG REPORT] DEMONSTRATE NRF MANAGEMENT PROCEDURES" page-type="text" context-info="{&quot;organisation&quot;:&quot;Virtual Labs&quot;,&quot;developer_institute&quot;:&quot;DLBG&quot;,&quot;expname&quot;:&quot;DEMONSTRATE NRF MANAGEMENT PROCEDURES&quot;,&quot;labname&quot;:&quot;Virtual Lab&quot;,&quot;phase&quot;:&quot;Testing&quot;}" checkbox-json="{&quot;text&quot;:[&quot;Insufficient Content&quot;],&quot;video&quot;:[&quot;Insufficient Content&quot;],&quot;assesment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;assessment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;simulation&quot;:[&quot;Simulation Not Working&quot;,&quot;Incorrect Results/Observations&quot;,&quot;Insufficient/Incorrect Instructions&quot;],&quot;DEFAULT&quot;:[&quot;Page Not Loading&quot;,&quot;Content Not Visible&quot;,&quot;Incorrect Content&quot;]}" button_style="border: none; color: #fff; background-color: #288ec8; text-align: center; font-size: 1.05rem; border-radius: 1em;padding: 0.6em 1.2em; margin: 0 10px" position="override" custom_button_class="v-button"></bug-report>
+          </div>
+        </nav>
+      </header>
+      <div class="container-fluid flex-fill d-flex flex-column vlabs-page-main">
+        <div class="row d-flex justify-content-between">
+          <div class="flex-column">
+          <div class="row py-4 px-4 breadcrumbs">
+          	<div class="title is-4 tools">Tools</div>
+          	<span class="mx-2">
+          		<i aria-hidden="true" class="fa fa-angle-right"></i>
+          	</span>
+          	<a href="performance-report.html" class="my-2 mx-3" target="_blank">
+          		<button class="v-button">Performance Tool</button>
+          	</a>
+          	<a href="validator-report.html" class="my-2 mx-3" target="_blank">
+          		<button class="v-button">Validation Tool</button>
+          	</a>
+          </div>
+          </div>
+        </div>
+        <div class="row flex-grow-1 d-flex flex-nowrap flex-column flex-lg-row">
+          <div class="modal fade popupmenu" id="popupMenu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">
+                              <a href="https://vlab.co.in" class="navbar-brand">
+                                  <img src="./assets/images/vlabs-color-small-moe.jpg" alt="vlabs logo" class="vlabs-logo">
+                              </a>
+                          </h5>
+                          <button type="button" class="btn-close align-self-center" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body nav-menu">
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="index.html" class="p-2 ">
+                                      Aim
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="theory.html" class="p-2 ">
+                                      Theory
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="pretest.html" class="p-2 ">
+                                      Pretest
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="procedure.html" class="p-2  current-item ">
+                                      Procedure
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="simulation.html" class="p-2 ">
+                                      Simulation
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="posttest.html" class="p-2 ">
+                                      Posttest
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="references.html" class="p-2 ">
+                                      References
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="contributors.html" class="p-2 ">
+                                      Contributors
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                              <div>
+                                  <div class="d-flex nav-menu-body">
+                                      <a href="feedback.html" class="p-2 ">
+                                      Feedback
+                                      </a>
+                                      
+                                  </div>
+                                  <div id="t-" class="collapse">
+                                      <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                                      </div>
+                                  </div>
+                              </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="nav flex-column sidebar nav-menu flex-shrink-0 px-lg-4 align-items-center align-items-lg-start hidden d-none d-lg-flex" id="menu">
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="index.html" class="p-2 ">
+                        Aim
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="theory.html" class="p-2 ">
+                        Theory
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="pretest.html" class="p-2 ">
+                        Pretest
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="procedure.html" class="p-2  current-item ">
+                        Procedure
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="simulation.html" class="p-2 ">
+                        Simulation
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="posttest.html" class="p-2 ">
+                        Posttest
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="references.html" class="p-2 ">
+                        References
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="contributors.html" class="p-2 ">
+                        Contributors
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex nav-menu-body">
+                        <a href="feedback.html" class="p-2 ">
+                        Feedback
+                        </a>
+                        
+                    </div>
+                    <div id="t-" class="collapse">
+                        <div class="px-3 d-flex flex-column tasks align-items-center align-items-lg-start">
+                        </div>
+                    </div>
+                </div>
+          </div>          <div class="vlabs-page-content px-5 pb-4 flex-grow-1 markdown-body">
+            <div class="text-center fix-spacing">
+              <h2 id="demonstrate-nrf-management-procedures">Demonstrate NRF Management Procedures</h2>
+          
+            </div>
+              <h2 id="step-1-deploy-core-network">Step 1: Deploy Core Network</h2>
+          <p><strong>Option A (Terminal):</strong>
+          Click on the <strong>Terminal button</strong> to open the terminal then from the project root directory, execute the following command:</p>
+          <h3 id="deploy-core-network-components">Deploy Core Network Components</h3>
+          <p>This command launches all the essential core network components (like AMF, SMF, UPF, NRF, and more) in the background. The <code>-d</code> flag means "detached mode" — the containers run silently in the background without cluttering your terminal. Think of it as starting the entire 5G infrastructure engine that powers everything else.</p>
+          <pre><code class="language-bash">docker compose -f docker-compose.yml up -d
+          </code></pre>
+          <ul>
+          <li>All core network functions are initialized</li>
+          <li>Service ports are exposed and configured</li>
+          <li>Network communication channels are established between the functions</li>
+          </ul>
+          <img src="images/prd1.png" width="90%">
+          
+          <p><em>Fig: Terminal output showing core network deployment with docker compose</em></p>
+          <h3 id="deploy-gnb-base-station-services">Deploy gNB (Base Station) Services</h3>
+          <p>Once your core network is humming along, it's time to bring the Base Station (gNB) online. This command spins up the gNB containers and makes them aware of your core network so they can start communicating. Without this, you'd have a network with no base station for devices to connect to!</p>
+          <pre><code class="language-bash"> docker compose -f docker-compose-gnb.yml up -d
+          </code></pre>
+          <ul>
+          <li>Base station (gNB) is initialized with proper configuration</li>
+          <li>gNB registers itself with the NRF (Network Repository Function) — essentially checking in with the core network</li>
+          <li>Radio interface is configured and ready to accept UE connections</li>
+          </ul>
+          <img src="images/prd2.png" width="90%">
+          
+          <p><em>Fig: Terminal output showing gNB deployment and connection to core network</em></p>
+          <h3 id="deploy-ue-user-equipment-services">Deploy UE (User Equipment) Services</h3>
+          <p>Now comes the fun part — bringing the end users into the network! This command starts up the UE containers (think of them as the "phones" or "devices" in your 5G network simulation). The UEs will automatically discover and connect to the gNB, just like real phones connecting to a cell tower.</p>
+          <pre><code class="language-bash">docker compose -f docker-compose-ue.yml up -d
+          </code></pre>
+          <ul>
+          <li>User Equipment devices are spun up and initialized</li>
+          <li>UEs are configured with proper identities (IMSI, etc.)</li>
+          <li>UEs automatically search for and connect to the nearby gNB</li>
+          <li>Connection negotiation begins with the core network</li>
+          </ul>
+          <img src="images/prd3.png" width="90%">
+          
+          <p><em>Fig: Terminal output showing UE deployment and attachment to gNB</em></p>
+          <img src="images/prd4.png" width="90%">
+          
+          <p><em>Fig: Complete 5G network topology with UE, gNB, and all core network functions running</em></p>
+          <h3 id="view-all-running-containers">View All Running Containers</h3>
+          <p>This command shows you a complete list of all containers that Docker is currently keeping alive — their IDs, status (running, stopped, etc.), ports, and friendly names. It's like asking "Who's home right now?" for your entire 5G network.</p>
+          <pre><code class="language-bash">docker ps
+          </code></pre>
+          <p><strong>What you'll see:</strong></p>
+          <ul>
+          <li>A table with all running containers</li>
+          <li>Container status (should be "Up" for all deployed components)</li>
+          <li>Port mappings showing how containers are exposed</li>
+          <li>Each container's unique ID and assigned name</li>
+          </ul>
+          <img src="images/prd5.png" width="90%">
+          
+          <p><em>Fig: Docker PS output listing all running 5G network containers with their status</em></p>
+          <h3 id="live-monitoring-for-core-network">Live Monitoring for Core Network</h3>
+          <p>This is your mission control center! This command sets up a live dashboard that automatically refreshes every 2 seconds, showing you real-time status updates of all your core network containers. Perfect for keeping an eye on things while everything is running — you'll instantly see if anything crashes or changes state without needing to run the command over and over.</p>
+          <pre><code class="language-bash">watch docker compose -f docker-compose.yml ps -a
+          </code></pre>
+          <p><strong>What you're monitoring:</strong></p>
+          <ul>
+          <li>Real-time status of all core network components (AMF, SMF, UPF, NRF, etc.)</li>
+          <li>Container health and uptime</li>
+          <li>Any crashes or restarts happening in real-time</li>
+          <li>Resource usage patterns</li>
+          </ul>
+          <img src="images/prd6.png" width="90%">
+          
+          <p><em>Fig: Continuous real-time monitoring of core network container status</em></p>
+          <h2 id="option-b-manual-deployment">Option B: Manual Deployment</h2>
+          <p>If you want complete control and prefer setting things up one-by-one, this is your option. It's like building with LEGO blocks — you add each piece manually and configure it exactly how you want.</p>
+          <p><strong>Steps:</strong></p>
+          <ol>
+          <li><strong>Add Each Network Function</strong> — Open the Network Function Panel and drag-and-drop each component (AMF, SMF, UPF, etc.) onto your topology canvas one at a time.</li>
+          <li><strong>Configure the Details</strong> — For each function you add, open the Configuration Panel on the left and fill in the specific settings (IP addresses, ports, identifiers, etc.).</li>
+          <li><strong>Start Them Up</strong> — Click the "Start" or "Deploy" button for each function individually. Watch as each one comes alive on your topology.</li>
+          <li><strong>Repeat Until Complete</strong> — Keep adding and configuring functions until your entire 5G network is assembled and all functions show a "Running" status.</li>
+          </ol>
+          <p><strong>Best for:</strong> Learning the system step-by-step, custom configurations, or troubleshooting specific components individually.</p>
+          <img src="images/prd7.png" width="90%">
+          
+          <p><em>Fig: Manual Deployment</em></p>
+          <hr>
+          <h2 id="option-c-automatic-deployment-recommended">Option C: Automatic Deployment (Recommended)</h2>
+          <p>The "easy button" for deploying your entire 5G network! This is the fastest way to get everything up and running without worrying about the details. Perfect if you just want to see the simulation in action.</p>
+          <p><strong>Steps:</strong></p>
+          <ol>
+          <li><strong>One Click</strong> — Click the <strong>One-Click Deploy</strong> button on the top toolbar. That's it!</li>
+          <li><strong>Confirm</strong> — A dialog will pop up asking "Are you sure?" Click Confirm, and sit back.</li>
+          <li><strong>Watch the Magic Happen</strong> — The system takes over from here!</li>
+          </ol>
+          <img src="images/prd8.png" width="90%">
+          
+          <p><em>Fig: Automatic Deployment</em></p>
+          <p><strong>What happens automatically:</strong></p>
+          <p><strong>The system does all this for you:</strong></p>
+          <ul>
+          <li>Clears any existing topology (fresh start)</li>
+          <li>Deploys the Service Bus first (the communication backbone)</li>
+          <li>Spins up all Network Functions in the right order:<ul>
+          <li>NRF (Network Repository Function) — the main registry</li>
+          <li>AMF (Access and Mobility Function) — handles UE connections</li>
+          <li>SMF (Session Management Function) — manages data sessions</li>
+          <li>UPF (User Plane Function) — processes user data</li>
+          <li>AUSF, UDM, PCF, NSSF, UDR — specialized network services</li>
+          <li>MySQL — database for storing network data</li>
+          <li>gNB — the 5G base station</li>
+          <li>UE — user equipment (phones/devices)</li>
+          <li>ext-dn — external data network</li>
+          </ul>
+          </li>
+          <li>Establishes all necessary connections between functions automatically</li>
+          <li>Functions appear one by one on your topology screen like dominoes stacking up</li>
+          <li>Waits for everything to stabilize before declaring success</li>
+          </ul>
+          <hr>
+          <h2 id="step-2-observe-network-function-registration-at-the-nrf">Step 2: Observe Network Function Registration at the NRF</h2>
+          <p>Once everything is deployed, let's peek under the hood and see how network functions introduce themselves to the main registry (NRF). This is like watching your network shake hands and exchange business cards!</p>
+          <img src="images/prd9.png" width="90%">
+          
+          <p><em>Fig: Network Function Registration</em></p>
+          <p><strong>Steps:</strong></p>
+          <ol>
+          <li><strong>Pick a Function</strong> — Select any Network Function from the topology (try AMF for example).</li>
+          <li><strong>Open Its Settings</strong> — Look for and click the Configuration Panel on the left side.</li>
+          <li><strong>See the Handshake</strong> — Click the <strong>Show Registration Message</strong> button to see the conversation between this function and the NRF.</li>
+          </ol>
+          <p><strong>What you'll observe:</strong></p>
+          <p><strong>The Registration Request</strong> — This is the function saying "Hi NRF! I'm the AMF and here's who I am. Here's my address, capabilities, and how you can reach me."</p>
+          <p><strong>The NRF Response</strong> — The NRF replies with "Welcome AMF! I've got you registered. Here's my acknowledgment."</p>
+          <p><strong>JSON Format</strong> — Both messages are shown in human-readable JSON, showing all the technical details like:</p>
+          <ul>
+          <li>Function type and instance ID</li>
+          <li>IP addresses and ports</li>
+          <li>Capabilities and supported features</li>
+          <li>Timestamps and identifiers</li>
+          </ul>
+          <hr>
+          <h2 id="step-3-view-registration-details-from-the-nrf">Step 3: View Registration Details from the NRF</h2>
+          <p>Now let's see the same handshake but from the NRF's perspective. The NRF is like a receptionist keeping track of everyone who checks in. Let's see who's on the registry!</p>
+          <img src="images/prd10.png" width="90%">
+          
+          <p><em>Fig: NRF Registration Details</em></p>
+          <p><strong>Steps:</strong></p>
+          <ol>
+          <li><strong>Find the NRF</strong> — Click on the NRF element in your topology.</li>
+          <li><strong>Configuration Panel</strong> — Open its Configuration Panel on the left.</li>
+          <li><strong>See the Full Registry</strong> — Click the <strong>Show Registration Message</strong> button to view all registrations.</li>
+          </ol>
+          <p><strong>What you'll observe:</strong></p>
+          <p><strong>All Registered Functions</strong> — A complete list of every Network Function that's checked in with the NRF, showing:</p>
+          <ul>
+          <li>Which functions are registered</li>
+          <li>Their identification details</li>
+          <li>When they registered</li>
+          <li>Their current status</li>
+          </ul>
+          <p><strong>Multiple Conversations</strong> — You'll see registration requests from all the functions (AMF, SMF, UPF, gNB, etc.) and the NRF's responses to each one.</p>
+          <p><strong>JSON Details</strong> — All the technical metadata formatted in easy-to-read JSON showing exactly what information each function provided during registration.</p>
+          <hr>
+          <h2 id="step-4-deregistration-of-a-network-function">Step 4: Deregistration of a Network Function</h2>
+          <p>What happens when a network function Deregistered.</p>
+          <img src="images/prd11.png" width="90%">
+          
+          <p><em>Fig: Deregistration</em></p>
+          <p><strong>Steps:</strong></p>
+          <ol>
+          <li><strong>Choose a Function to Remove</strong> — Select a Network Function you want to deregister (try SMF for example).</li>
+          <li><strong>Open Configuration</strong> — Click on its Configuration Panel.</li>
+          <li><strong>Deregister</strong> — Click the <strong>Deregister from NRF</strong> button to tell the registry that this function is shutting down.</li>
+          </ol>
+          <p><strong>What happens:</strong></p>
+          <p><strong>Clean Shutdown</strong> — The function sends a deregistration message to the NRF.</p>
+          <p><strong>Removal Confirmed</strong> — The NRF acknowledges and removes the function from its registry.</p>
+          <p><strong>Function is Gone</strong> — The function no longer appears in discovery searches and other functions won't try to contact it.</p>
+          <p><strong>Observation:</strong></p>
+          <ul>
+          <li>The selected Network Function is successfully deregistered from the NRF.</li>
+          <li>It's now offline and unavailable to the rest of the network.</li>
+          </ul>
+          <hr>
+          <h2 id="step-5-observe-deregistration-messages">Step 5: Observe Deregistration Messages</h2>
+          <p>After the deregistration of the Network Function, an orange indicator appears to denote that the Network Function is no longer registered with the NRF.</p>
+          <img src="images/prd12.png" width="90%">
+          
+          
+          <h3 id="from-the-network-function-side">From the Network Function Side</h3>
+          <p>Let's see exactly what the departing function said to the NRF when it left.</p>
+          <img src="images/prd13.png" width="90%">
+          
+          <p><em>Fig: Deregistration - NF Side</em></p>
+          <p><strong>Steps:</strong></p>
+          <ol>
+          <li>Click on the function that just deregistered.</li>
+          <li>Access its Configuration Panel.</li>
+          <li>Click <strong>Show Deregistration Message</strong> to see their Deregistration conversation.</li>
+          </ol>
+          <p><strong>What you'll see:</strong></p>
+          <p><strong>The Function's Deregistration</strong> — The message it sent to NRF saying "I'm shutting down, please remove me from the registry."</p>
+          <p><strong>The NRF's Acknowledgment</strong> — The NRF's response: "Got it, you're removed. Goodbye!"</p>
+          <p><strong>Full Technical Details</strong> — All conversations shown in JSON format with timestamps and identifiers.</p>
+          <h3 id="from-the-nrf-side">From the NRF Side</h3>
+          <p>Now let's check the same event from the NRF's viewpoint — the administrative record of who checked out.</p>
+          <img src="images/prd14.png" width="90%">
+          
+          <p><em>Fig: Deregistration - NRF Side</em></p>
+          <p><strong>Steps:</strong></p>
+          <ol>
+          <li><strong>Select the NRF</strong> — Click on the NRF in your topology.</li>
+          <li><strong>Configuration Panel</strong> — Open its Configuration Panel.</li>
+          <li><strong>See the Admin Record</strong> — Click <strong>Show Deregistration Message</strong> to view the deregistration from the NRF's perspective.</li>
+          </ol>
+          <p><strong>What you'll see:</strong></p>
+          <p><strong>Deregistration Log</strong> — The NRF's administrative record showing:</p>
+          <ul>
+          <li>Which Network Function sent the deregistration request</li>
+          <li>The exact timestamp of when it happened</li>
+          <li>The function's identification details</li>
+          <li>The NRF's processing and confirmation</li>
+          </ul>
+          <p><strong>Clean Removal</strong> — Evidence that the function has been successfully removed from the registry and won't appear in any future discovery searches.</p>
+          <p><strong>Technical Details</strong> — All information presented in JSON format for technical analysis.</p>
+          <hr>
+          <h2 id="step-6-network-function-discovery-after-deregistration">Step 6: Network Function Discovery After Deregistration</h2>
+          <p>Final proof that deregistration worked! When other network functions try to find the deregistered function, they'll get an empty response. Let's verify this.</p>
+          <img src="images/prd15.png" width="90%">
+          
+          <p><em>Fig: Network Function Discovery</em></p>
+          <p><strong>What's Happening:</strong></p>
+          <p>When a Network Function is deregistered, the NRF immediately verifies its removal whenever discovery requests come in. It's like removing someone from a business directory — they won't show up in any lookups anymore.</p>
+          <p><strong>Key Points:</strong></p>
+          <p><strong>Discovery Requests Fail</strong> — If any other function tries to discover the deregistered function by name or type, the NRF responds with "Not found."</p>
+          <p><strong>No Results</strong> — Deregistered Network Functions are completely absent from any discovery results.</p>
+          <p><strong>Verification</strong> — Discovery-related logs can be checked to confirm that:</p>
+          <ul>
+          <li>The deregistered function doesn't appear in any discovery responses</li>
+          <li>Other functions receive "not available" responses when attempting to locate it</li>
+          <li>The function has been completely removed from the network registry</li>
+          </ul>
+          <p><strong>Confirmation</strong> — This proves the deregistration was successful and complete.</p>
+          
+          </div>
+          <div class="bug-report-mobile">
+              <bug-report id="bug-report" title="[BUG REPORT] DEMONSTRATE NRF MANAGEMENT PROCEDURES" page-type="text" context-info="{&quot;organisation&quot;:&quot;Virtual Labs&quot;,&quot;developer_institute&quot;:&quot;DLBG&quot;,&quot;expname&quot;:&quot;DEMONSTRATE NRF MANAGEMENT PROCEDURES&quot;,&quot;labname&quot;:&quot;Virtual Lab&quot;,&quot;phase&quot;:&quot;Testing&quot;}" checkbox-json="{&quot;text&quot;:[&quot;Insufficient Content&quot;],&quot;video&quot;:[&quot;Insufficient Content&quot;],&quot;assesment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;assessment&quot;:[&quot;Incorrect Options&quot;,&quot;Incorrect Answer&quot;,&quot;Incorrect Question&quot;],&quot;simulation&quot;:[&quot;Simulation Not Working&quot;,&quot;Incorrect Results/Observations&quot;,&quot;Insufficient/Incorrect Instructions&quot;],&quot;DEFAULT&quot;:[&quot;Page Not Loading&quot;,&quot;Content Not Visible&quot;,&quot;Incorrect Content&quot;]}" position="override" button_style="
+                          position: fixed; 
+                          bottom: 20px;
+                          right: 20px;
+                          z-index: 1;
+                          font-size: 0;
+                          padding: 25px;
+                          border-radius: 50%;
+                          border: none;
+                          background-color: #0fc0ff;
+                          background-image: url(data:image/png;base64,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);
+                          background-repeat: no-repeat;
+                          background-position: center;
+                          background-size: 30px;
+                          filter: invert(1);">
+              </bug-report>
+          </div>        </div>
+      </div>
+      <footer class="text-light pt-2 vlabs-footer d-flex flex-column">
+        <div class="row px-5 mx-0">
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Community Links</span>
+            <a href="https://www.sakshat.ac.in/" class="text-light">Sakshat Portal</a>
+            <a href="http://outreach.vlabs.ac.in/" class="text-light">Outreach Portal</a>
+            <a href="https://vlab.co.in/faq" class="text-light">FAQ: Virtual Labs</a>
+          </div>
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Contact Us</span>
+            <span> Phone: General Information: 011-26582050 </span>
+            <span> Email: support@vlabs.ac.in </span>
+          </div>
+          <div class="col d-flex flex-column">
+            <span class="font-weight-bold vlabs-footer-sect-name pb-2 mb-3">Follow Us</span>
+            <div class="social-links">
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #55acee;" href="https://twitter.com/TheVirtualLabs">
+      	  <i class="fab fa-twitter"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #3b5998;" href="https://www.facebook.com/Virtual-Labs-IIT-Delhi-301510159983871/">
+      	  <i class="fab fa-facebook"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #e52d27;" href="https://www.youtube.com/watch?v=asxRaOgk6a0">
+      	  <i class="fab fa-youtube"></i>
+      	</a>
+      	<a class="p-2 mt-1 mr-2 d-inline-flex justify-content-center align-items-center" style="background: #2867B2;" href="https://in.linkedin.com/in/virtual-labs-008ba9136">
+      	  <i class="fab fa-linkedin"></i>
+      	</a>
+            </div>
+          </div>
+        </div>
+        <div class="m-0 py-2 text-center" style="font-family: &quot;Open Sans&quot;, sans-serif; background: #212121;">
+          <a class="text-primary font-weight-bold" href="https://www.gnu.org/licenses/agpl-3.0.en.html"> AGPL 3.0 </a>
+          &nbsp;&amp;&nbsp;
+          <a class="text-primary font-weight-bold" href="https://creativecommons.org/licenses/by-nc-sa/4.0/"> Creative Commons (CC BY-NC-SA 4.0) </a>
+        </div>
+      </footer>
+    <script src="./assets/js/toggleSidebar.js"></script>
+    <script src="./assets/js/event-handler.js"></script>
+
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register("sw.js");
+        });
+      }
+    </script>
+  
+
+<script type="module" src="https://cdn.vlabs.ac.in/bug-report/vlabs-bug-report.js"></script><script type="module" src="/exp-nrf-management-dei/plugins/svc-rating/index.js"></script><script type="module" src="/exp-nrf-management-dei/plugins/svc-rating/config.js"></script><script type="module" src="https://apis.google.com/js/api.js"></script></body></html>
