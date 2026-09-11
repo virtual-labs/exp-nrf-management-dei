@@ -1,3 +1,6 @@
+> **Audio Explanation:** For a comprehensive understanding of these theoretical concepts, you can listen on YouTube. 
+> [**Click here to listen the audio**](https://youtu.be/mPC6L4z-T-s)
+
 ## 1. Network Repository Function (NRF)
 
 ### 1.1 What is NRF?
