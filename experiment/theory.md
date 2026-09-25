@@ -22,9 +22,10 @@ As illustrated in **Figure 1**, the NRF acts as a centralized repository within 
   <li>Operational status (REGISTERED / UNAVAILABLE)</li>
 </ol>
 
-<img src="images/fig-1.svg" alt="NRF Central Registry Architecture" width="30%">
-
-*Fig. 1: NRF Central Registry Architecture*
+<div align="center">
+  <img src="images/fig-1.svg" alt="NRF Central Registry Architecture" width="30%">
+  <p><em>Figure 1: NRF Central Registry Architecture</em></p>
+</div>
 
 ### 1.3 Why NRF is Critical:
 Without NRF, each NF would need manual configuration with addresses of every other NF, which is impossible in cloud-native 5G systems where NFs:
@@ -94,8 +95,10 @@ The request contains a detailed NF Profile with the following fields:
 
 <p>The complete signaling flow for this process is depicted in <strong>Figure 2</strong>. As shown, the sequence begins with a new NF sending a registration request to the NRF. The NRF subsequently validates the provided NF profile and, upon success, returns a confirmation that includes a heartbeat timer to actively maintain the NF's registration status within the network.</p>
 
-<img src="images/fig-2.svg" alt="NF Registration Complete Flow" width="45%">
-<p><em>Fig. 2: NF Registration Complete Flow</em></p>
+<div align="center">
+  <img src="images/fig-2.svg" alt="NF Registration Complete Flow" width="45%">
+  <p><em>Figure 2: NF Registration Complete Flow</em></p>
+</div>
 
 ### 2.2 Example: AMF Registration:
 
@@ -214,9 +217,10 @@ Each discovered NF includes critical connectivity details such as:
 
 The overarching discovery mechanism within the 5G Core is demonstrated in **Figure 3**. When a requester NF needs a specific service, it queries the NRF. The NRF then searches its internal registry and responds with a curated list of available target NFs that match the requested criteria. This seamless process allows the requester to efficiently establish direct communication with the most suitable service provider.
 
-<img src="images/fig-3.svg" alt="NF Discovery Process" width="45%">
-
-*Fig. 3: NF Discovery Process*
+<div align="center">
+  <img src="images/fig-3.svg" alt="NF Discovery Process" width="45%">
+  <p><em>Figure 3: NF Discovery Process</em></p>
+</div>
 
 ### 3.3 Why Discovery is Important:
 * Removes manual configuration - No hardcoded IP addresses needed
@@ -322,9 +326,10 @@ In these cases, the NF cannot send a DELETE request.
 
 To summarize these two distinct approaches, **Figure 4** compares the methods of deregistration in the 5G Core. While manual deregistration involves an NF intentionally sending a delete request to gracefully remove its profile, automatic deregistration serves as a robust fail-safe. It relies entirely on the heartbeat mechanism, allowing the NRF to independently remove an NF from the registry if it fails to provide periodic updates.
 
-<img src="images/fig-4.svg" alt="Deregistration Types - Manual vs Automatic" width="45%">
-
-*Fig. 4: Deregistration Types - Manual vs Automatic*
+<div align="center">
+  <img src="images/fig-4.svg" alt="Deregistration Types - Manual vs Automatic" width="45%">
+  <p><em>Figure 4: Deregistration Types - Manual vs Automatic</em></p>
+</div>
 
 **Benefits of Heartbeat Mechanism:**
 * Self-healing registry - Automatically removes dead NFs
